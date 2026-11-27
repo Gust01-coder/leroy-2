@@ -841,10 +841,19 @@ function ListaInner() {
             )}
 
             {/* CTAs */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
+              <Link
+                href={`/checkout?id=${encodeURIComponent(project.id)}${
+                  includeInstall ? "&install=1" : ""
+                }`}
+                className="btn-accent w-full"
+              >
+                Finalizar no Checkout Expresso
+                <ArrowRightIcon size={15} />
+              </Link>
               <Link
                 href={`/mapa?id=${encodeURIComponent(project.id)}`}
-                className="btn-accent w-full"
+                className="btn-primary w-full"
               >
                 <MapIcon size={15} />
                 Traçar rota ({uniqueAisles.length}{" "}
@@ -852,7 +861,6 @@ function ListaInner() {
               </Link>
               <Link href="/chat" className="btn-secondary w-full">
                 Voltar ao Copiloto
-                <ArrowRightIcon size={14} />
               </Link>
             </div>
           </aside>

@@ -70,6 +70,7 @@ const EVENT_TYPE_LABELS: Record<string, string> = {
   install_service_added: "Leroy Instala",
   navigation_started: "Rota iniciada",
   navigation_completed: "Rota concluída",
+  checkout_completed: "Pedido concluído",
   handoff_requested: "Handoff",
   item_substituted: "Substituição",
   item_checked: "Coletado",

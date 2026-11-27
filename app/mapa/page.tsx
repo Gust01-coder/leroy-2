@@ -490,18 +490,27 @@ function MapaInner() {
               </ol>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-2">
               <Link
-                href={`/lista?id=${encodeURIComponent(project.id)}`}
-                className="btn-secondary !py-2.5 !text-[12.5px]"
+                href={`/checkout?id=${encodeURIComponent(project.id)}`}
+                className="btn-accent w-full"
               >
-                <ArrowLeftIcon size={14} />
-                Voltar à lista
+                Pagar no celular e sair (Sem fila)
+                <ArrowRightIcon size={15} />
               </Link>
-              <Link href="/chat" className="btn-primary !py-2.5 !text-[12.5px]">
-                Novo diagnóstico
-                <ArrowRightIcon size={14} />
-              </Link>
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  href={`/lista?id=${encodeURIComponent(project.id)}`}
+                  className="btn-secondary !py-2.5 !text-[12.5px]"
+                >
+                  <ArrowLeftIcon size={14} />
+                  Voltar à lista
+                </Link>
+                <Link href="/chat" className="btn-primary !py-2.5 !text-[12.5px]">
+                  Novo diagnóstico
+                  <ArrowRightIcon size={14} />
+                </Link>
+              </div>
             </div>
           </div>
         </div>

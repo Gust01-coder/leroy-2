@@ -246,6 +246,7 @@ export const ANALYTICS_EVENT_TYPES = [
   "esl_blink_triggered",
   "navigation_started",
   "navigation_completed",
+  "checkout_completed",
   "handoff_requested",
   "tutorial_viewed",
   "store_changed",

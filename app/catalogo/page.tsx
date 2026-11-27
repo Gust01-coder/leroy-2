@@ -131,7 +131,7 @@ function CatalogoInner() {
     });
   }
 
-  function buildCustomList(target: "lista" | "mapa") {
+  function buildCustomList(target: "lista" | "mapa" | "checkout") {
     if (selectedIds.length === 0) return;
     const id = `catalogo-${Date.now().toString(36)}`;
     const items = materializeProjectItems(
@@ -423,22 +423,29 @@ function CatalogoInner() {
               {selectedIds.length}{" "}
               {selectedIds.length === 1 ? "produto selecionado" : "produtos selecionados"}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => buildCustomList("lista")}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-3.5 py-2 text-[12.5px] font-semibold text-white transition hover:bg-white/25"
+                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-white/15 px-3.5 py-2 text-[12.5px] font-semibold text-white transition hover:bg-white/25"
               >
                 Abrir Lista
-                <ArrowRightIcon size={13} />
               </button>
               <button
                 type="button"
                 onClick={() => buildCustomList("mapa")}
-                className="btn-accent !px-3.5 !py-2 !text-[12.5px]"
+                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-white/15 px-3.5 py-2 text-[12.5px] font-semibold text-white transition hover:bg-white/25"
               >
                 <MapIcon size={13} />
-                Ver Rota 2D
+                Rota 2D
+              </button>
+              <button
+                type="button"
+                onClick={() => buildCustomList("checkout")}
+                className="btn-accent !min-h-[40px] !px-4 !py-2 !text-[12.5px]"
+              >
+                Checkout
+                <ArrowRightIcon size={13} />
               </button>
             </div>
           </div>
