@@ -226,7 +226,7 @@ export function auditProjectCompatibility(
       ? `${criticalCount} alerta${criticalCount > 1 ? "s" : ""} crítico${criticalCount > 1 ? "s" : ""}`
       : warningCount > 0
       ? `${warningCount} ponto${warningCount > 1 ? "s" : ""} de atenção`
-      : "Lista blindada contra 2ª viagem";
+      : "Tudo certo: você não vai precisar voltar à loja";
 
   return {
     score,

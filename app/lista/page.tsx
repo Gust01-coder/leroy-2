@@ -495,13 +495,13 @@ function ListaInner() {
                           : "border-rule"
                       }`}
                     >
-                      <div className="flex items-center gap-3.5">
+                      <div className="flex flex-wrap items-center gap-3.5 sm:flex-nowrap">
                         {!isOptionalExcluded && (
                           <button
                             type="button"
                             onClick={() => toggleChecked(item)}
                             aria-label={`Marcar ${item.name} no carrinho`}
-                            className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 transition ${
+                            className={`relative flex h-6 w-6 flex-shrink-0 items-center justify-center rounded border-2 transition before:absolute before:-inset-2.5 before:content-[''] ${
                               isChecked
                                 ? "border-leroy bg-leroy text-signage"
                                 : "border-rule-strong bg-white hover:border-signage"
@@ -562,7 +562,7 @@ function ListaInner() {
                         </div>
 
                         {/* Preço + Ações à direita */}
-                        <div className="flex flex-shrink-0 flex-col items-end gap-2">
+                        <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:flex-shrink-0 sm:flex-col sm:items-end">
                           <div className="flex items-center gap-1.5">
                             <span className="font-mono text-[15px] font-extrabold tabular-nums text-signage">
                               {formatBRL(item.price * item.quantity)}
@@ -573,7 +573,7 @@ function ListaInner() {
                                 onClick={() => removeItem(item.productId)}
                                 title="Remover item"
                                 aria-label={`Remover ${item.name}`}
-                                className="rounded p-1 text-signage-subtle transition hover:bg-danger-soft hover:text-danger"
+                                className="rounded p-2 text-signage-muted transition hover:bg-danger-soft hover:text-danger"
                               >
                                 <CloseIcon size={13} />
                               </button>
@@ -586,9 +586,9 @@ function ListaInner() {
                                 type="button"
                                 onClick={() => setEslItem(item)}
                                 title="Acender a etiqueta do produto na prateleira"
-                                className="inline-flex h-7 items-center gap-1 rounded-md border border-leroy/60 bg-leroy-soft px-2 font-mono text-[10.5px] font-bold text-leroy-deep transition hover:bg-leroy hover:text-signage"
+                                className="inline-flex h-10 items-center gap-1.5 rounded-md border border-leroy/60 bg-leroy-soft px-3 text-[12.5px] font-bold text-leroy-deep transition hover:bg-leroy hover:text-signage"
                               >
-                                <RadioIcon size={11} />
+                                <RadioIcon size={14} />
                                 Localizar
                               </button>
                             )}
@@ -602,7 +602,7 @@ function ListaInner() {
                                     [item.productId]: !prev[item.productId],
                                   }))
                                 }
-                                className={`h-7 rounded-md px-2.5 text-[11.5px] font-semibold transition ${
+                                className={`h-10 rounded-md px-3 text-[12.5px] font-semibold transition ${
                                   isOptionalExcluded
                                     ? "bg-signage text-white"
                                     : "bg-leroy-soft text-leroy-deep"
@@ -611,25 +611,25 @@ function ListaInner() {
                                 {isOptionalExcluded ? "+ Incluir" : "Incluído"}
                               </button>
                             ) : (
-                              <div className="inline-flex h-7 items-center rounded-md border border-rule bg-floor">
+                              <div className="inline-flex h-10 items-center rounded-md border border-rule bg-floor">
                                 <button
                                   type="button"
                                   onClick={() => updateQty(item.productId, -1)}
-                                  aria-label="Diminuir"
-                                  className="px-1.5 text-signage-muted hover:text-signage"
+                                  aria-label={`Diminuir quantidade de ${item.name}`}
+                                  className="flex h-10 w-10 items-center justify-center text-signage-muted hover:text-signage"
                                 >
-                                  <MinusIcon size={11} />
+                                  <MinusIcon size={14} />
                                 </button>
-                                <span className="min-w-[20px] text-center font-mono text-[11.5px] font-bold text-signage">
+                                <span className="min-w-[20px] text-center font-mono text-[13px] font-bold text-signage">
                                   {item.quantity}
                                 </span>
                                 <button
                                   type="button"
                                   onClick={() => updateQty(item.productId, 1)}
-                                  aria-label="Aumentar"
-                                  className="px-1.5 text-signage-muted hover:text-signage"
+                                  aria-label={`Aumentar quantidade de ${item.name}`}
+                                  className="flex h-10 w-10 items-center justify-center text-signage-muted hover:text-signage"
                                 >
-                                  <PlusIcon size={11} />
+                                  <PlusIcon size={14} />
                                 </button>
                               </div>
                             )}
@@ -736,7 +736,7 @@ function ListaInner() {
               >
                 <div className="flex items-center gap-2 text-[12.5px] font-bold">
                   <ShieldCheckIcon size={15} className="text-leroy" />
-                  Auditoria Anti-2ª Viagem
+                  Conferência da lista
                 </div>
                 <span className="font-mono text-[12px] font-extrabold">
                   {audit.score}%

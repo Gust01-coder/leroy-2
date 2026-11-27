@@ -171,7 +171,7 @@ function MapaInner() {
         <div className="container-wide flex flex-wrap items-center justify-between gap-4 py-5">
           <div>
             <div className="flex items-center gap-2 font-mono text-[10.5px] font-bold uppercase tracking-wider text-leroy-deep">
-              <span>ROTA NA LOJA + ETIQUETA QUE ACENDE</span>
+              <span>Sua rota na loja</span>
               <span>·</span>
               <span>{activeStore.shortName}</span>
             </div>
@@ -201,7 +201,6 @@ function MapaInner() {
               activeStopIndex={navActive ? stopIndex : null}
               completedAisles={completedAisles}
               onSelectAisle={jumpToAisle}
-              storeLabel={`${activeStore.name} (${activeStore.shortName})`}
             />
 
             {/* Card de Navegação Ativa + ESL Pick-to-Light */}
@@ -240,7 +239,7 @@ function MapaInner() {
                         <span className="kicker">
                           Itens nesta gôndola · Último Metro
                         </span>
-                        <span className="font-mono text-[10px] font-bold text-leroy-deep">
+                        <span className="font-mono text-[11px] font-bold text-leroy-deep">
                           TOQUE EM LOCALIZAR
                         </span>
                       </div>
@@ -383,7 +382,7 @@ function MapaInner() {
               <div className="border-b border-rule bg-floor px-4 py-3">
                 <span className="kicker">Roteiro de Coleta</span>
                 <h2 className="font-display text-[16px] font-bold text-signage">
-                  Paradas otimizadas (clique para focar)
+                  Paradas na ordem certa (toque para ver)
                 </h2>
               </div>
 
@@ -457,10 +456,10 @@ function MapaInner() {
                                     className="p-0.5"
                                   />
                                   <div className="min-w-0 flex-1">
-                                    <div className="truncate font-semibold text-signage">
+                                    <div className="line-clamp-2 font-semibold leading-snug text-signage">
                                       {it.quantity}× {it.name}
                                     </div>
-                                    <div className="font-mono text-[10px] text-signage-subtle">
+                                    <div className="text-[12px] text-signage-muted">
                                       {it.shelfLocation}
                                     </div>
                                   </div>
@@ -468,9 +467,9 @@ function MapaInner() {
                                     type="button"
                                     onClick={() => setEslItem(it)}
                                     title="Acender a etiqueta do produto na prateleira"
-                                    className="inline-flex flex-shrink-0 items-center gap-1 rounded bg-leroy-soft px-2 py-1 font-mono text-[10px] font-bold text-leroy-deep hover:bg-leroy hover:text-signage"
+                                    className="inline-flex h-10 flex-shrink-0 items-center gap-1.5 rounded-md border border-leroy/60 bg-leroy-soft px-3 text-[12.5px] font-bold text-leroy-deep hover:bg-leroy hover:text-signage"
                                   >
-                                    <RadioIcon size={11} />
+                                    <RadioIcon size={14} />
                                     Localizar
                                   </button>
                                 </div>
@@ -497,7 +496,7 @@ function MapaInner() {
                 className="btn-secondary !py-2.5 !text-[12.5px]"
               >
                 <ArrowLeftIcon size={14} />
-                Lista & Auditoria
+                Voltar à lista
               </Link>
               <Link href="/chat" className="btn-primary !py-2.5 !text-[12.5px]">
                 Novo diagnóstico

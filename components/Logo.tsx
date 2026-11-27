@@ -6,7 +6,7 @@ export function Logo({
   variant?: "dark" | "light";
 }) {
   const titleColor = variant === "dark" ? "text-white" : "text-signage";
-  const subColor = variant === "dark" ? "text-white/55" : "text-signage-subtle";
+  const subColor = variant === "dark" ? "text-white/70" : "text-signage-subtle";
 
   return (
     <div className={`inline-flex items-center gap-2.5 ${className}`}>
@@ -43,7 +43,7 @@ export function Logo({
           LM Copiloto
         </span>
         <span
-          className={`mt-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] ${subColor}`}
+          className={`mt-0.5 hidden font-mono text-[10px] font-semibold sm:block uppercase tracking-[0.16em] ${subColor}`}
         >
           Leroy Merlin · Modo Loja
         </span>

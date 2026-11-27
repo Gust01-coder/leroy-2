@@ -157,7 +157,7 @@ export default function StoreModeHomePage() {
                 type="text"
                 value={command}
                 onChange={(e) => setCommand(e.target.value)}
-                placeholder='Ex: "torneira pingando", "pintar quarto 3x4m", "bucha drywall"…'
+                placeholder="Ex: torneira pingando"
                 className="h-11 w-full rounded-lg bg-signage pl-10 pr-3 text-[14px] text-white outline-none ring-1 ring-white/10 transition placeholder:text-white/40 focus:ring-leroy"
               />
             </div>
@@ -215,7 +215,7 @@ export default function StoreModeHomePage() {
                   />
                 </div>
                 <div className="mt-4">
-                  <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-signage-subtle">
+                  <div className="font-mono text-[11px] font-semibold uppercase tracking-wider text-signage-muted">
                     {sector}
                   </div>
                   <div className="mt-0.5 font-display text-[15px] font-bold leading-snug text-signage group-hover:text-leroy-deep">
@@ -266,11 +266,11 @@ export default function StoreModeHomePage() {
                   <div className="flex flex-1 flex-col justify-between p-3.5">
                     <div>
                       <div className="flex items-center gap-1.5 text-[10.5px]">
-                        <span className="font-mono font-bold uppercase tracking-wider text-signage-subtle">
+                        <span className="font-mono font-bold uppercase tracking-wider text-signage-muted">
                           {prod.brand}
                         </span>
                         {prod.leroyExclusive && (
-                          <span className="font-mono text-[9.5px] font-semibold text-leroy-deep">
+                          <span className="font-mono text-[10.5px] font-semibold text-leroy-deep">
                             · Exclusivo
                           </span>
                         )}
@@ -284,7 +284,7 @@ export default function StoreModeHomePage() {
                       <span className="font-mono text-[15px] font-extrabold tabular-nums text-signage">
                         {formatBRL(prod.price)}
                       </span>
-                      <span className="text-[11px] font-medium text-signage-subtle">
+                      <span className="text-[11px] font-medium text-signage-muted">
                         {qty} un.
                       </span>
                     </div>
@@ -323,10 +323,10 @@ export default function StoreModeHomePage() {
             </div>
             <div className="min-w-0">
               <div className="font-display text-[14.5px] font-bold text-signage group-hover:text-leroy-deep">
-                Lista Auditada (Demo)
+                Exemplo de lista pronta
               </div>
               <div className="text-[12px] text-signage-muted">
-                Compatibilidade + 3 níveis de orçamento
+                Peças que combinam, em 3 faixas de preço
               </div>
             </div>
           </Link>

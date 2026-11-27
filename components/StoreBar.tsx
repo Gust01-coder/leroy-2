@@ -114,7 +114,7 @@ export function StoreBar() {
                 aria-haspopup="listbox"
                 aria-expanded={storeMenuOpen}
                 aria-label={`Loja: ${activeStore.shortName}. Trocar de loja`}
-                className="inline-flex h-8 max-w-full items-center gap-2 rounded-md border border-white/15 bg-signage-soft px-2.5 text-[11.5px] font-medium text-white transition hover:border-leroy/70"
+                className="inline-flex h-10 max-w-full items-center gap-2 rounded-md border border-white/15 bg-signage-soft px-2.5 text-[12px] font-medium text-white transition hover:border-leroy/70"
               >
                 <StoreIcon size={13} className="text-leroy" />
                 <span className="min-w-0 max-w-[125px] truncate sm:max-w-[165px]">
@@ -173,7 +173,7 @@ export function StoreBar() {
               onClick={() => setQrOpen(true)}
               aria-label="Abrir etiqueta QR do carrinho"
               title="Etiqueta QR Code do Carrinho"
-              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-white/15 bg-signage-soft px-2.5 text-[11.5px] font-semibold text-white/90 transition hover:border-leroy hover:text-leroy"
+              className="inline-flex h-10 min-w-[40px] items-center justify-center gap-1.5 rounded-md border border-white/15 bg-signage-soft px-2.5 text-[12px] font-semibold text-white/90 transition hover:border-leroy hover:text-leroy"
             >
               <QrCodeIcon size={14} />
               <span className="hidden sm:inline">QR</span>

@@ -44,7 +44,7 @@ function projectTotal(p: DynamicProjectList): number {
 const WELCOME_MESSAGE: ChatMessage = {
   id: "welcome",
   role: "assistant",
-  text: "Modo Loja conectado. Descreva o que você precisa resolver — por **voz**, **texto** ou **foto da peça**.\n\nEu diagnostico o problema, valido compatibilidade contra 2ª viagem, confirmo estoque nesta unidade e marco a prateleira com etiqueta piscante.",
+  text: "Modo Loja conectado. Descreva o que você precisa resolver — por **voz**, **texto** ou **foto da peça**.\n\nEu diagnostico o problema, confiro se as peças combinam entre si, confirmo o estoque desta loja e acendo a etiqueta na prateleira.",
   suggestions: [
     "Minha torneira está pingando",
     "Quero pintar um quarto azul de 4x5m com teto",
@@ -332,19 +332,19 @@ function ChatInner() {
             <button
               type="button"
               onClick={() => setVisionOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-rule bg-floor px-2.5 py-1 font-mono text-[11px] font-semibold text-signage transition hover:border-leroy hover:bg-leroy-soft"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-rule bg-floor px-3 py-2 text-[13px] font-semibold text-signage transition hover:border-leroy hover:bg-leroy-soft"
             >
-              <CameraIcon size={12} />
+              <CameraIcon size={14} />
               Foto
             </button>
             <button
               type="button"
               onClick={() => sendMessage("Chamar vendedor especialista")}
               disabled={loading}
-              className="inline-flex items-center gap-1.5 rounded-md bg-signage px-2.5 py-1 font-mono text-[11px] font-semibold text-leroy transition hover:bg-signage-soft"
+              className="inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap rounded-md bg-signage px-3 py-2 text-[13px] font-semibold text-leroy transition hover:bg-signage-soft"
             >
-              <UserCheckIcon size={12} />
-              Chamar Vendedor
+              <UserCheckIcon size={14} />
+              Chamar vendedor
             </button>
           </div>
         </div>
@@ -554,7 +554,7 @@ function ChatInner() {
               aria-label="Identificar peça por foto"
               title="Enviar foto da peça"
               onClick={() => setVisionOpen(true)}
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-rule-strong bg-white text-signage transition hover:border-leroy hover:bg-leroy-soft hover:text-leroy-deep"
+              className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg border border-rule-strong bg-white text-signage transition hover:border-leroy hover:bg-leroy-soft hover:text-leroy-deep"
             >
               <CameraIcon size={18} />
             </button>
@@ -566,16 +566,16 @@ function ChatInner() {
               onChange={(e) => setInput(e.target.value)}
               maxLength={500}
               aria-label="Mensagem para o copiloto"
-              placeholder="Fale ou digite o problema (ex: pintar quarto 4x5m, torneira pingando)…"
+              placeholder="Descreva o problema…"
               disabled={loading}
-              className="h-10 flex-1 rounded-lg border border-rule-strong bg-floor px-3.5 text-[13.5px] text-signage outline-none transition placeholder:text-signage-subtle focus:border-signage focus:bg-white"
+              className="h-11 min-w-0 flex-1 rounded-lg border border-rule-strong bg-floor px-3.5 text-[13.5px] text-signage outline-none transition placeholder:text-signage-subtle focus:border-signage focus:bg-white"
             />
 
             <button
               type="submit"
               disabled={loading || !input.trim()}
               aria-label="Enviar mensagem"
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-signage text-leroy transition hover:bg-signage-soft disabled:opacity-35"
+              className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-signage text-leroy transition hover:bg-signage-soft disabled:opacity-50"
             >
               <SendIcon size={16} />
             </button>

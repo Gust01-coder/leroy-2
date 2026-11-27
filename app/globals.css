@@ -61,14 +61,14 @@
 
   /* Chip tátil técnico */
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-md border border-rule bg-white
-           px-3 py-1.5 text-[12.5px] font-medium text-signage-muted transition
+    @apply inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-rule bg-white
+           px-3.5 py-2 text-left text-[13px] font-medium text-signage-muted transition
            hover:border-signage hover:text-signage hover:bg-floor disabled:opacity-40;
   }
 
   /* Rótulo técnico superior */
   .kicker {
-    @apply font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-signage-subtle;
+    @apply font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-signage-muted;
   }
 
   /* Painel branco técnico com hairline 1px */

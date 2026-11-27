@@ -86,14 +86,12 @@ export function StoreMap({
   completedAisles,
   onSelectAisle,
   heatmapCounts,
-  storeLabel = "Leroy Merlin Vitória · Av. Fernando Ferrari, 2600",
 }: {
   route?: ComputedStoreRoute;
   activeStopIndex?: number | null;
   completedAisles?: Set<string>;
   onSelectAisle?: (aisleId: string) => void;
   heatmapCounts?: Record<string, number>;
-  storeLabel?: string;
 }) {
   const [zoom, setZoom] = useState<1 | 1.35>(1);
 
@@ -120,7 +118,7 @@ export function StoreMap({
           <span className="truncate">
             {isHeatmap
               ? "Planta 2D · Mapa de Calor de Demanda"
-              : `Planta 2D · ${storeLabel}`}
+              : "Planta da loja"}
           </span>
         </div>
 
@@ -656,7 +654,7 @@ export function StoreMap({
         <span className="text-[10px] text-signage-subtle">
           {isHeatmap
             ? "Calor em tempo real · Vitória ES"
-            : "Clique em qualquer corredor destacado"}
+            : "Toque em um corredor destacado"}
         </span>
       </div>
     </div>

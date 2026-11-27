@@ -278,14 +278,14 @@ export default function PainelPage() {
           <KpiCard
             label="Chamados ativos"
             value={String(openTicketsCount)}
-            sub="Na fila de handoff"
+            sub="Aguardando vendedor"
             Icon={UserCheckIcon}
           />
         </section>
 
         {/* Navegação em 3 abas focadas (zero sobrecarga cognitiva) */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-rule pb-3">
-          <div className="inline-flex max-w-full overflow-x-auto rounded-xl border border-rule-strong bg-white p-1">
+          <div className="flex w-full overflow-x-auto rounded-xl border border-rule-strong bg-white p-1 sm:inline-flex sm:w-auto">
             <TabButton
               active={activeTab === "atendimento"}
               onClick={() => setActiveTab("atendimento")}
@@ -297,7 +297,7 @@ export default function PainelPage() {
               active={activeTab === "planta"}
               onClick={() => setActiveTab("planta")}
               icon={<MapIcon size={14} />}
-              label="Planta & Estoque"
+              label="Planta"
               badge={
                 summary.outOfStockAlerts.length > 0
                   ? String(summary.outOfStockAlerts.length)
@@ -308,7 +308,7 @@ export default function PainelPage() {
               active={activeTab === "dados"}
               onClick={() => setActiveTab("dados")}
               icon={<ChartIcon size={14} />}
-              label="Dados & Eventos"
+              label="Dados"
             />
           </div>
 
@@ -327,7 +327,7 @@ export default function PainelPage() {
             {/* Fila de Handoff (7 cols) */}
             <div className="space-y-3 lg:col-span-7">
               <h2 className="font-display text-[17px] font-bold text-signage">
-                Fila de Handoff Humano
+                Chamados de clientes
               </h2>
 
               {tickets.map((ticket) => {
@@ -422,7 +422,7 @@ export default function PainelPage() {
                     Busca Rápida do Vendedor
                   </h2>
                   <span className="font-mono text-[10px] font-semibold uppercase text-leroy-deep">
-                    Companion
+                    Corredor + estoque
                   </span>
                 </div>
                 <p className="mt-1 text-[12.5px] text-signage-muted">
@@ -472,12 +472,12 @@ export default function PainelPage() {
                         <div className="truncate text-[13px] font-semibold text-signage">
                           {product.name}
                         </div>
-                        <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-signage-muted">
+                        <div className="mt-0.5 truncate text-[11px] text-signage-muted">
                           <span className="font-mono font-bold text-signage">
                             {product.corridorCode}
                           </span>
-                          <span>·</span>
-                          <span>{product.shelfLocation}</span>
+                          {" · "}
+                          {product.shelfLocation}
                         </div>
                       </div>
                       <div className="flex-shrink-0 text-right">
@@ -705,7 +705,8 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[13px] font-semibold transition ${
+      aria-pressed={active}
+      className={`inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-[13px] font-semibold transition sm:flex-none sm:px-3.5 ${
         active
           ? "bg-signage text-white shadow-sm"
           : "text-signage-muted hover:text-signage"
