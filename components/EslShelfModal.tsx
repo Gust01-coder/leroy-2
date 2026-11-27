@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { CloseIcon, MapPinIcon, RadioIcon } from "./Icons";
 import { ProductThumb } from "./ProductThumb";
-import { buildEslPlanogram } from "@/lib/eslPlanogram";
+import { buildEslPlanogram } from "@/lib/store/eslPlanogram";
 import { trackEvent } from "@/lib/telemetry";
 import { ProjectItem } from "@/lib/types";
-import { corridorOf } from "@/lib/storeMap";
+import { corridorOf } from "@/lib/store/storeMap";
 import { useDialog } from "./useDialog";
 
 function formatBRL(v: number) {

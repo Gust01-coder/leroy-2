@@ -1,4 +1,4 @@
-import { Department, StoreInfo, StoreSpecialist } from "./types";
+import { Department, StoreInfo, StoreSpecialist } from "../types";
 
 export const STORES: StoreInfo[] = [
   {

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { cleanText } from "@/lib/copilotLlm";
-import { isRateLimited } from "@/lib/rateLimit";
-import { listEvents, saveEvent, storageMode } from "@/lib/serverStore";
-import { DEFAULT_STORE_ID, STORES } from "@/lib/stores";
+import { cleanText } from "@/lib/ai/copilotLlm";
+import { isRateLimited } from "@/lib/server/rateLimit";
+import { listEvents, saveEvent, storageMode } from "@/lib/server/serverStore";
+import { DEFAULT_STORE_ID, STORES } from "@/lib/store/stores";
 import { ANALYTICS_EVENT_TYPES, AnalyticsEvent } from "@/lib/types";
 
 export const dynamic = "force-dynamic";

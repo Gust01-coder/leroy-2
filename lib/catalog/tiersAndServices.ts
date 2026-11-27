@@ -1,5 +1,5 @@
 import { materializeProjectItems } from "./projects";
-import { BudgetTierId, InstallServiceOption, ProjectItem } from "./types";
+import { BudgetTierId, InstallServiceOption, ProjectItem } from "../types";
 
 export type TierOption = {
   id: BudgetTierId;

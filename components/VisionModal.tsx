@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { CameraIcon, CloseIcon, SparkleIcon, UploadIcon } from "./Icons";
-import { VISION_SAMPLES } from "@/lib/visionEngine";
+import { VISION_SAMPLES } from "@/lib/ai/visionEngine";
 import { VisionSampleId } from "@/lib/types";
 import { useDialog } from "./useDialog";
 

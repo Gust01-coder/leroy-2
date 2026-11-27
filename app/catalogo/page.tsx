@@ -14,9 +14,9 @@ import {
   PlusIcon,
   SearchIcon,
 } from "@/components/Icons";
-import { semanticSearchCatalog } from "@/lib/semanticSearch";
-import { materializeProjectItems } from "@/lib/projects";
-import { getStoreById } from "@/lib/stores";
+import { semanticSearchCatalog } from "@/lib/ai/semanticSearch";
+import { materializeProjectItems } from "@/lib/catalog/projects";
+import { getStoreById } from "@/lib/store/stores";
 import {
   getSelectedStoreId,
   saveDynamicProject,

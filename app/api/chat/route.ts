@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { INITIAL_CONTEXT, processCopilotMessage, type CopilotReplyPayload } from "@/lib/copilotEngine";
-import { processWithLlm, type ChatTurn } from "@/lib/copilotLlm";
-import { CHAT_MODEL, isLlmEnabled } from "@/lib/llm";
-import { isRateLimited } from "@/lib/rateLimit";
-import { saveTicket } from "@/lib/serverStore";
-import { DEFAULT_STORE_ID } from "@/lib/stores";
+import { INITIAL_CONTEXT, processCopilotMessage, type CopilotReplyPayload } from "@/lib/ai/copilotEngine";
+import { processWithLlm, type ChatTurn } from "@/lib/ai/copilotLlm";
+import { CHAT_MODEL, isLlmEnabled } from "@/lib/ai/llm";
+import { isRateLimited } from "@/lib/server/rateLimit";
+import { saveTicket } from "@/lib/server/serverStore";
+import { DEFAULT_STORE_ID } from "@/lib/store/stores";
 import { ChatContext } from "@/lib/types";
 
 const MAX_MESSAGE = 500;

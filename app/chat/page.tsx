@@ -20,8 +20,8 @@ import {
   SparkleIcon,
   UserCheckIcon,
 } from "@/components/Icons";
-import { INITIAL_CONTEXT } from "@/lib/copilotEngine";
-import { getStoreById } from "@/lib/stores";
+import { INITIAL_CONTEXT } from "@/lib/ai/copilotEngine";
+import { getStoreById } from "@/lib/store/stores";
 import {
   getSelectedStoreId,
   saveDynamicProject,
@@ -29,7 +29,7 @@ import {
   trackEvent,
 } from "@/lib/telemetry";
 import { ChatContext, ChatMessage, DynamicProjectList, VisionAnalysisResult } from "@/lib/types";
-import { corridorOf } from "@/lib/storeMap";
+import { corridorOf } from "@/lib/store/storeMap";
 
 function formatBRL(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });

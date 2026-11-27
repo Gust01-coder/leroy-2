@@ -22,8 +22,8 @@ import {
   WrenchIcon,
   ZapIcon,
 } from "@/components/Icons";
-import { CATALOG, getProductById, getStockForStore } from "@/lib/catalog";
-import { getStoreById } from "@/lib/stores";
+import { CATALOG, getProductById, getStockForStore } from "@/lib/catalog/catalog";
+import { getStoreById } from "@/lib/store/stores";
 import { getSelectedStoreId, getStoredTickets } from "@/lib/telemetry";
 import { Product, ProjectItem } from "@/lib/types";
 

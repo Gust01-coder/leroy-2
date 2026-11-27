@@ -17,9 +17,9 @@ import {
   MapPinIcon,
   RadioIcon,
 } from "@/components/Icons";
-import { getPresetProject } from "@/lib/projects";
-import { computeStoreRoute, getAisleById } from "@/lib/storeMap";
-import { getStoreById } from "@/lib/stores";
+import { getPresetProject } from "@/lib/catalog/projects";
+import { computeStoreRoute, getAisleById } from "@/lib/store/storeMap";
+import { getStoreById } from "@/lib/store/stores";
 import {
   getDynamicProject,
   getSelectedStoreId,

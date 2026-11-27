@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
-import { SEED_EVENTS, SEED_TICKETS } from "./telemetry";
-import type { AnalyticsEvent, HandoffTicket, HandoffTicketStatus } from "./types";
+import { SEED_EVENTS, SEED_TICKETS } from "../telemetry";
+import type { AnalyticsEvent, HandoffTicket, HandoffTicketStatus } from "../types";
 
 const MAX_ROWS = 500;
 const sql = process.env.DATABASE_URL ? neon(process.env.DATABASE_URL) : null;

@@ -1,6 +1,6 @@
 import { getProductById, getStockForStore } from "./catalog";
-import { DEFAULT_STORE_ID } from "./stores";
-import { DynamicProjectList, ProjectItem, TutorialStep } from "./types";
+import { DEFAULT_STORE_ID } from "../store/stores";
+import { DynamicProjectList, ProjectItem, TutorialStep } from "../types";
 
 type ItemSpec = {
   productId: string;

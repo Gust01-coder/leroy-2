@@ -1,5 +1,5 @@
-import { CATALOG, getStockForStore } from "./catalog";
-import { Product, ProjectItem } from "./types";
+import { CATALOG, getStockForStore } from "../catalog/catalog";
+import { Product, ProjectItem } from "../types";
 
 export type EslSlot = {
   shelfLevel: 3 | 2 | 1; // 3 = superior (altura dos olhos), 2 = média, 1 = inferior

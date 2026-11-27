@@ -21,11 +21,11 @@ import {
   ShieldCheckIcon,
   WrenchIcon,
 } from "@/components/Icons";
-import { getProductById } from "@/lib/catalog";
-import { auditProjectCompatibility } from "@/lib/compatibilityEngine";
-import { equivalentQuantity, getPresetProject, materializeProjectItems } from "@/lib/projects";
-import { getStoreById } from "@/lib/stores";
-import { corridorOf, optimizeAisleOrder } from "@/lib/storeMap";
+import { getProductById } from "@/lib/catalog/catalog";
+import { auditProjectCompatibility } from "@/lib/catalog/compatibilityEngine";
+import { equivalentQuantity, getPresetProject, materializeProjectItems } from "@/lib/catalog/projects";
+import { getStoreById } from "@/lib/store/stores";
+import { corridorOf, optimizeAisleOrder } from "@/lib/store/storeMap";
 import {
   getDynamicProject,
   getSelectedStoreId,
@@ -36,7 +36,7 @@ import {
   getInstallServiceForIntent,
   getTiersForIntent,
   materializeTierItems,
-} from "@/lib/tiersAndServices";
+} from "@/lib/catalog/tiersAndServices";
 import {
   BudgetTierId,
   CompatibilityAlert,

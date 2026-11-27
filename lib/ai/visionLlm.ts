@@ -6,8 +6,8 @@ import {
   cleanText,
 } from "./copilotLlm";
 import { CHAT_MODEL, VISION_MODEL, generateJson } from "./llm";
-import { ALL_PRESET_IDS, getPresetProject } from "./projects";
-import type { DynamicProjectList, VisionAnalysisResult } from "./types";
+import { ALL_PRESET_IDS, getPresetProject } from "../catalog/projects";
+import type { DynamicProjectList, VisionAnalysisResult } from "../types";
 
 const CONFIDENCE = { alta: 90, media: 70, baixa: 40 } as const;
 

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { buildPixPayload, computeCheckoutTotals } from "./checkout";
-import { materializeProjectItems } from "./projects";
+import { materializeProjectItems } from "../catalog/projects";
 
 test("Pix aplica 5% de desconto e scan_and_go tem frete zero", () => {
   const items = materializeProjectItems(

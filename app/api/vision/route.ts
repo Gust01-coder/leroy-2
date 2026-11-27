@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { VISION_MODEL, isLlmEnabled } from "@/lib/llm";
-import { isRateLimited } from "@/lib/rateLimit";
-import { analyzeVisionInput } from "@/lib/visionEngine";
-import { analyzeWithLlm, parseImageDataUrl } from "@/lib/visionLlm";
-import { DEFAULT_STORE_ID } from "@/lib/stores";
+import { VISION_MODEL, isLlmEnabled } from "@/lib/ai/llm";
+import { isRateLimited } from "@/lib/server/rateLimit";
+import { analyzeVisionInput } from "@/lib/ai/visionEngine";
+import { analyzeWithLlm, parseImageDataUrl } from "@/lib/ai/visionLlm";
+import { DEFAULT_STORE_ID } from "@/lib/store/stores";
 import { VisionSampleId } from "@/lib/types";
 
 // Foto ja chega reduzida pelo cliente (~200 KB); o teto protege o limite de 4,5 MB da Vercel.

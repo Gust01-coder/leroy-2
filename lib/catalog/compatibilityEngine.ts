@@ -4,7 +4,7 @@ import {
   CompatibilityAudit,
   DynamicProjectList,
   ProjectItem,
-} from "./types";
+} from "../types";
 
 /**
  * Motor de Auditoria "Anti-Segunda Viagem" (inspirado no Project-Cart Verification).

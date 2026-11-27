@@ -13,7 +13,7 @@ import {
   SearchIcon,
   StoreIcon,
 } from "./Icons";
-import { STORES, getStoreById } from "@/lib/stores";
+import { STORES, getStoreById } from "@/lib/store/stores";
 import {
   getSelectedStoreId,
   setSelectedStoreId,

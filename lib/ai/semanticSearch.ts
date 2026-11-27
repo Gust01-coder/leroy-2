@@ -1,5 +1,5 @@
-import { CATALOG, getStockForStore } from "./catalog";
-import { Product, SemanticSearchMatch } from "./types";
+import { CATALOG, getStockForStore } from "../catalog/catalog";
+import { Product, SemanticSearchMatch } from "../types";
 
 /**
  * Motor de busca semântica local (zero dependência externa):

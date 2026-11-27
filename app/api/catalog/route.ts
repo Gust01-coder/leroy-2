@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { semanticSearchCatalog } from "@/lib/semanticSearch";
-import { DEFAULT_STORE_ID, getStoreById } from "@/lib/stores";
+import { semanticSearchCatalog } from "@/lib/ai/semanticSearch";
+import { DEFAULT_STORE_ID, getStoreById } from "@/lib/store/stores";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);

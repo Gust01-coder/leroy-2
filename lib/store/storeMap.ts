@@ -1,4 +1,4 @@
-import { Aisle, RoutePoint } from "./types";
+import { Aisle, RoutePoint } from "../types";
 
 /**
  * Planta arquitetônica 2D inspirada na unidade real:

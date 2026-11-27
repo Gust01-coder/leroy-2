@@ -1,4 +1,4 @@
-import { DEFAULT_STORE_ID } from "./stores";
+import { DEFAULT_STORE_ID } from "./store/stores";
 import {
   AnalyticsEvent,
   AnalyticsEventType,

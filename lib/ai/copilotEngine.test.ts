@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { INITIAL_CONTEXT, processCopilotMessage } from "./copilotEngine";
-import type { ChatContext } from "./types";
+import type { ChatContext } from "../types";
 
 const ctx: ChatContext = { ...INITIAL_CONTEXT, storeId: "es-vitoria" };
 const SCREEN_ACTION = /\bfotos?\b|cat[aá]logo/i; // tratados no chat, nao viram mensagem

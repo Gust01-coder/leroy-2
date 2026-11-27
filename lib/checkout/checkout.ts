@@ -1,4 +1,4 @@
-import type { ProjectItem } from "./types";
+import type { ProjectItem } from "../types";
 
 export type FulfillmentMode = "scan_and_go" | "clique_retire" | "entrega";
 export type PaymentMethod = "pix" | "cartao" | "totem";

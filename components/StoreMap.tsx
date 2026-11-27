@@ -8,7 +8,7 @@ import {
   MAP_VIEW_H,
   MAP_VIEW_W,
   getAisleById,
-} from "@/lib/storeMap";
+} from "@/lib/store/storeMap";
 import { RoutePoint } from "@/lib/types";
 
 function pointsToPath(pts: RoutePoint[]): string {

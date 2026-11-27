@@ -1,4 +1,4 @@
-import { Product } from "./types";
+import { Product } from "../types";
 
 /**
  * Produtos reais do site da Leroy Merlin Brasil: nome oficial, codigo, foto e link

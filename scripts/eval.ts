@@ -2,8 +2,8 @@
 // Uso: npm run eval            (motor local)
 //      npm run eval -- --llm   (modelo; exige GEMINI_API_KEY)
 import { readFileSync } from "node:fs";
-import { INITIAL_CONTEXT, processCopilotMessage, type CopilotReplyPayload } from "../lib/copilotEngine";
-import { processWithLlm } from "../lib/copilotLlm";
+import { INITIAL_CONTEXT, processCopilotMessage, type CopilotReplyPayload } from "../lib/ai/copilotEngine";
+import { processWithLlm } from "../lib/ai/copilotLlm";
 
 type Case = { cat: string; q: string; ok: string[]; ids?: string[]; safety?: string };
 const cases: Case[] = JSON.parse(readFileSync(new URL("../eval/golden.json", import.meta.url), "utf8"));

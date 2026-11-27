@@ -1,14 +1,14 @@
-import { buildPaintingProject, getPresetProject, materializeProjectItems } from "./projects";
+import { buildPaintingProject, getPresetProject, materializeProjectItems } from "../catalog/projects";
 import { normalizeText, semanticSearchCatalog } from "./semanticSearch";
-import { DEFAULT_STORE_ID, getSpecialistForDepartment } from "./stores";
+import { DEFAULT_STORE_ID, getSpecialistForDepartment } from "../store/stores";
 import {
   ChatContext,
   ChatMessage,
   Department,
   DynamicProjectList,
   HandoffTicket,
-} from "./types";
-import { corridorOf } from "./storeMap";
+} from "../types";
+import { corridorOf } from "../store/storeMap";
 
 export const INITIAL_CONTEXT: ChatContext = {
   step: "start",

@@ -1,7 +1,7 @@
-import { getPresetProject } from "./projects";
+import { getPresetProject } from "../catalog/projects";
 import { normalizeText, semanticSearchCatalog } from "./semanticSearch";
-import { DEFAULT_STORE_ID } from "./stores";
-import { VisionAnalysisResult, VisionSampleId } from "./types";
+import { DEFAULT_STORE_ID } from "../store/stores";
+import { VisionAnalysisResult, VisionSampleId } from "../types";
 
 export type VisionSampleMeta = {
   id: VisionSampleId;

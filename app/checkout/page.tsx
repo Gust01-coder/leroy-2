@@ -20,7 +20,7 @@ import {
   StoreIcon,
   WrenchIcon,
 } from "@/components/Icons";
-import { getProductById, getStockForStore } from "@/lib/catalog";
+import { getProductById, getStockForStore } from "@/lib/catalog/catalog";
 import {
   CompletedOrder,
   FulfillmentMode,
@@ -31,17 +31,17 @@ import {
   formatBRL,
   generateOrderCode,
   saveCompletedOrder,
-} from "@/lib/checkout";
-import { auditProjectCompatibility } from "@/lib/compatibilityEngine";
-import { getPresetProject, materializeProjectItems } from "@/lib/projects";
-import { getStoreById } from "@/lib/stores";
+} from "@/lib/checkout/checkout";
+import { auditProjectCompatibility } from "@/lib/catalog/compatibilityEngine";
+import { getPresetProject, materializeProjectItems } from "@/lib/catalog/projects";
+import { getStoreById } from "@/lib/store/stores";
 import {
   getDynamicProject,
   getSelectedStoreId,
   saveDynamicProject,
   trackEvent,
 } from "@/lib/telemetry";
-import { getInstallServiceForIntent } from "@/lib/tiersAndServices";
+import { getInstallServiceForIntent } from "@/lib/catalog/tiersAndServices";
 import { CompatibilityAlert, DynamicProjectList } from "@/lib/types";
 
 const INSTALL_SLOTS = [

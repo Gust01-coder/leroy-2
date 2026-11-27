@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { listTickets, updateTicketStatus } from "@/lib/serverStore";
+import { listTickets, updateTicketStatus } from "@/lib/server/serverStore";
 import { HandoffTicketStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";

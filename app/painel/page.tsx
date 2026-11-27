@@ -18,8 +18,8 @@ import {
   UserCheckIcon,
   WrenchIcon,
 } from "@/components/Icons";
-import { semanticSearchCatalog } from "@/lib/semanticSearch";
-import { getStoreById } from "@/lib/stores";
+import { semanticSearchCatalog } from "@/lib/ai/semanticSearch";
+import { getStoreById } from "@/lib/store/stores";
 import {
   computeAnalyticsSummary,
   eventsToCsv,
@@ -33,7 +33,7 @@ import {
   HandoffTicket,
   HandoffTicketStatus,
 } from "@/lib/types";
-import { corridorOf } from "@/lib/storeMap";
+import { corridorOf } from "@/lib/store/storeMap";
 
 type PanelTab = "atendimento" | "planta" | "dados";
 
