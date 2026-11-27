@@ -1,4 +1,5 @@
 import type { ProjectItem } from "../types";
+import { formatBRL } from "../format";
 
 export type FulfillmentMode = "scan_and_go" | "clique_retire" | "entrega";
 export type PaymentMethod = "pix" | "cartao" | "totem";
@@ -154,12 +155,7 @@ export function generateOrderCode(storeId: string): { code: string; exitPin: str
   return { code: `LM-${prefix}-${pin}`, exitPin: pin };
 }
 
-export function formatBRL(value: number): string {
-  return value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-}
+export { formatBRL };
 
 const ORDERS_STORAGE_KEY = "lm_copiloto_orders_v1";
 
