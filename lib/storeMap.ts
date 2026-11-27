@@ -209,7 +209,7 @@ export const AISLES: Aisle[] = [
   {
     id: "H2",
     corridorNumber: "C04",
-    label: "Corredor C04 · Tubos, Sifões & Engates Tigre",
+    label: "Corredor C04 · Tubos, Sifões & Engates",
     shortLabel: "Tubos/Sifões",
     department: "Hidráulica",
     x: 30,
@@ -222,7 +222,7 @@ export const AISLES: Aisle[] = [
   {
     id: "H3",
     corridorNumber: "C05",
-    label: "Corredor C05 · Vedação & Reparos Blukit",
+    label: "Corredor C05 · Vedação & Reparos",
     shortLabel: "Vedação",
     department: "Hidráulica",
     x: 30,
@@ -332,7 +332,7 @@ export const AISLES: Aisle[] = [
   {
     id: "E2",
     corridorNumber: "C20",
-    label: "Corredor C20 · Showroom Iluminação Inspire",
+    label: "Corredor C20 · Showroom Iluminação",
     shortLabel: "Iluminação",
     department: "Elétrica",
     x: 120,

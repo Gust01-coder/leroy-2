@@ -103,6 +103,7 @@ export function ProductDetailModal({
               <span className="ml-1.5 text-[12px] text-signage-subtle">
                 / {product.unit}
               </span>
+              <div className="text-[11px] text-signage-subtle">Preço de referência</div>
             </div>
 
             {inStock ? (
@@ -131,15 +132,22 @@ export function ProductDetailModal({
 
             <div className="rounded-lg bg-floor p-3">
               <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-signage-subtle">
-                Código de referência
+                Código Leroy Merlin
               </div>
               <div className="mt-1.5 flex items-center gap-2 text-signage">
                 <MicroBarcode className="h-3.5 w-14" />
                 <span className="font-mono text-[12px] font-bold">{product.sku}</span>
               </div>
-              <div className="mt-0.5 text-[11px] text-signage-subtle">
-                Etiqueta E-Ink vinculada
-              </div>
+              {product.url && (
+                <a
+                  href={product.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex min-h-[32px] items-center text-[12px] font-bold text-leroy-deep underline underline-offset-2"
+                >
+                  Ver no site da Leroy
+                </a>
+              )}
             </div>
           </div>
 

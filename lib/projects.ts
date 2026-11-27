@@ -209,7 +209,7 @@ const TUTORIALS: Record<string, TutorialStep[]> = {
     {
       step: 2,
       title: "Fure com a broca correta para a bucha",
-      detail: "Use broca vídea 8mm para buchas S8 (alvenaria) na profundidade do parafuso + 5mm. Em drywall, use a broca indicada para bucha borboleta.",
+      detail: "Use broca vídea 8mm para buchas S8 (alvenaria) na profundidade do parafuso + 5mm. Em drywall, use a broca indicada na embalagem da bucha para drywall.",
       durationMin: 8,
       tip: "Prenda um envelope de papel dobrado com fita crepe logo abaixo do furo para capturar toda a poeira.",
     },
@@ -237,7 +237,7 @@ const TUTORIALS: Record<string, TutorialStep[]> = {
     {
       step: 3,
       title: "Revise os fios com conector Wago (se necessário)",
-      detail: "Se notar fios escurecidos ou fita derretida, substitua a emenda por conectores Wago 32A — encaixe rápido e seguro contra superaquecimento.",
+      detail: "Se notar fios escurecidos ou fita derretida, substitua a emenda por conectores de emenda Wago, de encaixe rápido e seguro contra superaquecimento.",
       durationMin: 8,
     },
     {
@@ -268,6 +268,30 @@ const TUTORIALS: Record<string, TutorialStep[]> = {
       detail: "Acomode o driver dentro do corpo do painel, prenda nas travas laterais e teste o acendimento.",
       durationMin: 4,
     },
+  ],
+  "refazer-rejunte": [
+    { step: 1, title: "Raspe o rejunte velho", detail: "Passe o raspador nas juntas até tirar 2 a 3mm do rejunte escurecido ou solto. Não force a lâmina contra a borda do azulejo.", durationMin: 25, safetyWarning: "Use óculos: lascas de rejunte podem pular." },
+    { step: 2, title: "Limpe e deixe secar", detail: "Aplique o limpador de mofo nas juntas, espere agir, enxágue e deixe secar bem antes do rejunte novo.", durationMin: 15, tip: "Rejunte em junta úmida mancha e não adere." },
+    { step: 3, title: "Aplique o rejunte novo", detail: "Preencha as juntas com a espátula em movimentos diagonais e retire o excesso logo em seguida.", durationMin: 20 },
+    { step: 4, title: "Limpe o excesso e espere a cura", detail: "Passe pano úmido sobre o azulejo depois de 15 a 30 minutos e evite molhar a área pelo tempo indicado na embalagem.", durationMin: 10 },
+  ],
+  "pintar-portao": [
+    { step: 1, title: "Lixe a ferrugem e a tinta solta", detail: "Use a lixa de ferro até sobrar só metal firme ou tinta bem aderida. Remova o pó com pano seco.", durationMin: 30, safetyWarning: "Use máscara e luvas ao lixar ferrugem." },
+    { step: 2, title: "Aplique o fundo para metal", detail: "Passe uma demão fina de fundo nas partes lixadas e espere secar conforme a embalagem.", durationMin: 20 },
+    { step: 3, title: "Pinte com esmalte", detail: "Dilua o esmalte com aguarrás se a embalagem indicar e pinte com pincel em camadas finas, no sentido das barras.", durationMin: 40, tip: "Pinte com tempo seco e fora do sol forte para não formar bolhas." },
+    { step: 4, title: "Segunda demão e limpeza", detail: "Depois de seco, aplique a segunda demão. Limpe o pincel com aguarrás.", durationMin: 30 },
+  ],
+  "reparo-caixa-acoplada": [
+    { step: 1, title: "Feche o registro do vaso e esvazie a caixa", detail: "Feche o registro atrás do vaso e dê descarga para esvaziar a caixa acoplada.", durationMin: 3 },
+    { step: 2, title: "Retire o mecanismo antigo", detail: "Tire a tampa da caixa, solte a mangueira de entrada e desrosqueie o mecanismo gasto.", durationMin: 10, tip: "Tire uma foto antes de desmontar para lembrar a posição das peças." },
+    { step: 3, title: "Instale o reparo novo", detail: "Encaixe as peças novas na mesma posição, aperte com a mão e reconecte a entrada de água.", durationMin: 12 },
+    { step: 4, title: "Teste o enchimento e a descarga", detail: "Abra o registro, ajuste a altura da boia até a água parar abaixo do ladrão e verifique se não escorre água para o vaso.", durationMin: 5 },
+  ],
+  "desentupir-pia": [
+    { step: 1, title: "Tire a água parada", detail: "Retire o excesso de água da cuba com um copo e um balde para enxergar o ralo.", durationMin: 3 },
+    { step: 2, title: "Use o desentupidor", detail: "Encaixe o desentupidor bem sobre o ralo, tampe o ladrão com um pano e bombeie com força algumas vezes.", durationMin: 5 },
+    { step: 3, title: "Se não resolver, limpe o sifão", detail: "Com um balde embaixo, desrosqueie o copo do sifão, retire a sujeira e monte de novo.", durationMin: 10, safetyWarning: "Não misture desentupidor líquido com outros produtos de limpeza." },
+    { step: 4, title: "Teste com água quente", detail: "Deixe correr água quente por 1 minuto para conferir se a pia escoa normalmente.", durationMin: 2 },
   ],
 };
 
@@ -329,7 +353,7 @@ export function buildPaintingProject(params: {
     { productId: "tin-trincha", quantity: 1, reason: "Recortes em cantos e rodapés" },
     { productId: "tin-fita-crepe", quantity: 1, reason: "Proteção de batentes e rodapés" },
     { productId: "tin-lona", quantity: 1, reason: "Proteção do piso e móveis" },
-    { productId: "tin-lixa-120", quantity: 1, reason: "Nivelamento antes da pintura" },
+    { productId: "tin-lixa-120", quantity: 3, reason: "Nivelamento antes da pintura" },
     {
       productId: "tin-selador",
       quantity: 1,
@@ -443,7 +467,7 @@ export function getPresetProject(
         sourceIntent: "torneira",
         items: materializeProjectItems(
           [
-            { productId: "hid-torneira-mono", quantity: 1, reason: "Torneira nova 1/4 de volta" },
+            { productId: "hid-torneira-mono", quantity: 1, reason: "Torneira monocomando nova" },
             { productId: "hid-engate-flex", quantity: 1, reason: "Conexão segura à parede" },
             { productId: "hid-veda-rosca", quantity: 1, reason: "Veda as roscas sem gotejar" },
             { productId: "fer-chave-inglesa", quantity: 1, reason: "Aperto das porcas inferiores" },
@@ -528,25 +552,25 @@ export function getPresetProject(
           ? "Instalação de prateleira em Drywall"
           : "Instalação de prateleira em Alvenaria",
         subtitle: isDrywall
-          ? "Buchas borboleta para gesso + suportes reforçados"
-          : "Buchas S8 + brocas vídea + nivelamento preciso",
+          ? "Buchas para gesso + suportes reforçados"
+          : "Buchas de 8mm + brocas + nivelamento preciso",
         description: isDrywall
           ? "Kit seguro para paredes ocas de gesso acartonado (drywall), com buchas especiais de expansão que evitam que o parafuso solte."
-          : "Tudo o que você precisa para fixar sua prateleira reta e firme em parede de tijolo ou concreto, até 40kg.",
+          : "Tudo o que você precisa para fixar sua prateleira reta e firme em parede de tijolo ou concreto, com suportes reforçados.",
         storeId,
         difficulty: "Moderado",
         estimatedInstallMin: 25,
         sourceIntent: "prateleira",
         items: materializeProjectItems(
           [
-            { productId: "fix-prateleira-mdf", quantity: 1, reason: "Prateleira branca 80×25cm" },
-            { productId: "fix-mao-francesa", quantity: 1, reason: "Suporte reforçado até 40kg" },
+            { productId: "fix-prateleira-mdf", quantity: 1, reason: "Prateleira branca 90×30cm" },
+            { productId: "fix-mao-francesa", quantity: 2, reason: "Par de suportes reforçados" },
             {
               productId: isDrywall ? "fix-bucha-drywall" : "fix-bucha-s8",
               quantity: 1,
               reason: isDrywall ? "Própria para gesso/drywall" : "Fixação firme em alvenaria",
             },
-            { productId: "fer-kit-brocas", quantity: 1, reason: "Brocas 6, 8 e 10mm" },
+            { productId: "fer-kit-brocas", quantity: 1, reason: "Brocas para concreto e madeira" },
             { productId: "fer-nivel-bolha", quantity: 1, reason: "Garante alinhamento reto" },
             {
               productId: "fer-furadeira",
@@ -568,7 +592,7 @@ export function getPresetProject(
         title: "Troca de resistência do chuveiro",
         subtitle: "Reparo elétrico seguro com conector Wago",
         description:
-          "Volte a ter água quente em 20 minutos com segurança reforçada: inclui resistência blindada, conector Wago 32A (evita emenda derretida) e chave teste.",
+          "Volte a ter água quente em 20 minutos com segurança reforçada: inclui resistência original, conector de emenda Wago (evita emenda derretida) e chave teste.",
         storeId,
         difficulty: "Moderado",
         estimatedInstallMin: 20,
@@ -597,26 +621,126 @@ export function getPresetProject(
         title: "Upgrade de iluminação LED",
         subtitle: "Mais claridade com até 85% de economia",
         description:
-          "Kit prático para substituir luminária antiga por painel LED moderno de luz neutra + itens de segurança elétrica.",
+          "Kit prático para substituir luminária antiga por painel LED moderno de luz branca + itens de segurança elétrica.",
         storeId,
         difficulty: "Fácil",
         estimatedInstallMin: 18,
         sourceIntent: "iluminacao",
         items: materializeProjectItems(
           [
-            { productId: "ele-painel-led-18w", quantity: 1, reason: "Luz neutra uniforme 4000K" },
-            { productId: "ele-fita-isolante", quantity: 1, reason: "Isolamento antichama" },
+            { productId: "ele-painel-led-18w", quantity: 1, reason: "Luz branca uniforme" },
+            { productId: "ele-fita-isolante", quantity: 1, reason: "Isola as emendas" },
             { productId: "ele-chave-teste", quantity: 1, reason: "Confirma circuito desligado" },
             {
               productId: "ele-lampada-led-9w",
               quantity: 1,
               optional: true,
-              reason: "Luz quente extra para abajur ou ponto auxiliar",
+              reason: "Luz amarela extra para abajur ou ponto auxiliar",
             },
           ],
           storeId
         ),
         tutorial: TUTORIALS["trocar-iluminacao"],
+        createdAt: Date.now(),
+      };
+
+    case "refazer-rejunte":
+      return {
+        id: "refazer-rejunte",
+        title: "Refazer rejunte do banheiro",
+        subtitle: "Rejunte novo sem mofo em um fim de semana",
+        description:
+          "Para rejunte escuro, mofado ou soltando no box e no piso: raspador, limpador de mofo e rejunte para área úmida.",
+        storeId,
+        difficulty: "Moderado",
+        estimatedInstallMin: 70,
+        sourceIntent: "rejunte",
+        items: materializeProjectItems(
+          [
+            { productId: "mat-raspador-rejunte", quantity: 1, reason: "Tira o rejunte velho sem lascar o azulejo" },
+            { productId: "lim-removedor-mofo", quantity: 1, reason: "Limpa o mofo antes do rejunte novo" },
+            { productId: "mat-rejunte-branco", quantity: 2, reason: "Próprio para box e área úmida" },
+            { productId: "mat-espatula-aco", quantity: 1, reason: "Aplica e nivela o rejunte" },
+            { productId: "lim-pano-multiuso", quantity: 1, reason: "Remove o excesso do azulejo" },
+            { productId: "mat-rejunte-cinza", quantity: 1, optional: true, reason: "Alternativa cinza que disfarça manchas" },
+          ],
+          storeId
+        ),
+        tutorial: TUTORIALS["refazer-rejunte"],
+        createdAt: Date.now(),
+      };
+
+    case "pintar-portao":
+      return {
+        id: "pintar-portao",
+        title: "Pintar portão ou grade de ferro",
+        subtitle: "Fim da ferrugem com fundo e esmalte",
+        description:
+          "Para portão, grade ou janela de ferro descascando: lixa de metal, fundo de aderência, esmalte sintético e aguarrás.",
+        storeId,
+        difficulty: "Moderado",
+        estimatedInstallMin: 120,
+        sourceIntent: "portao",
+        items: materializeProjectItems(
+          [
+            { productId: "tin-lixa-ferro", quantity: 3, reason: "Tira ferrugem e tinta solta" },
+            { productId: "tin-fundo-galvanizado", quantity: 1, reason: "Faz o esmalte aderir no metal" },
+            { productId: "tin-esmalte-preto", quantity: 1, reason: "Acabamento resistente ao tempo" },
+            { productId: "tin-pincel-esmalte", quantity: 1, reason: "Pincel próprio para esmalte" },
+            { productId: "tin-aguarras", quantity: 1, reason: "Dilui o esmalte e limpa o pincel" },
+            { productId: "tin-lona", quantity: 1, optional: true, reason: "Protege o piso de respingos" },
+          ],
+          storeId
+        ),
+        tutorial: TUTORIALS["pintar-portao"],
+        createdAt: Date.now(),
+      };
+
+    case "reparo-caixa-acoplada":
+      return {
+        id: "reparo-caixa-acoplada",
+        title: "Conserto da caixa acoplada",
+        subtitle: "Descarga que não para de encher ou vaza no vaso",
+        description:
+          "Kit de reparo para a caixa acoplada que deixa água escorrendo no vaso ou não para de encher, com a opção do mecanismo completo.",
+        storeId,
+        difficulty: "Fácil",
+        estimatedInstallMin: 30,
+        sourceIntent: "descarga",
+        items: materializeProjectItems(
+          [
+            { productId: "hid-reparo-caixa", quantity: 1, reason: "Troca as vedações gastas da caixa" },
+            { productId: "hid-veda-rosca", quantity: 1, reason: "Veda a entrada de água" },
+            { productId: "hid-engate-flex", quantity: 1, optional: true, reason: "Mangueira nova se a antiga estiver ressecada" },
+            { productId: "hid-mecanismo-caixa", quantity: 1, optional: true, reason: "Se o reparo não resolver, troque o mecanismo" },
+          ],
+          storeId
+        ),
+        tutorial: TUTORIALS["reparo-caixa-acoplada"],
+        createdAt: Date.now(),
+      };
+
+    case "desentupir-pia":
+      return {
+        id: "desentupir-pia",
+        title: "Desentupir pia ou ralo",
+        subtitle: "Água descendo de novo sem chamar encanador",
+        description:
+          "Para pia, tanque ou ralo com água parada: desentupidor manual primeiro e produto líquido para gordura.",
+        storeId,
+        difficulty: "Fácil",
+        estimatedInstallMin: 20,
+        sourceIntent: "entupimento",
+        items: materializeProjectItems(
+          [
+            { productId: "hid-desentupidor", quantity: 1, reason: "Resolve a maioria dos entupimentos" },
+            { productId: "lim-desentupidor-liquido", quantity: 1, reason: "Dissolve gordura no cano" },
+            { productId: "fer-chave-inglesa", quantity: 1, optional: true, reason: "Abre o sifão se precisar limpar" },
+            { productId: "hid-sifao-univ", quantity: 1, optional: true, reason: "Troque se o sifão estiver rachado" },
+          ],
+          storeId
+        ),
+        tutorial: TUTORIALS["desentupir-pia"],
         createdAt: Date.now(),
       };
 
@@ -636,4 +760,8 @@ export const ALL_PRESET_IDS = [
   "instalar-prateleira-drywall",
   "troca-resistencia",
   "trocar-iluminacao",
+  "refazer-rejunte",
+  "pintar-portao",
+  "reparo-caixa-acoplada",
+  "desentupir-pia",
 ];

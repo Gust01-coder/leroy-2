@@ -48,6 +48,8 @@ export type Product = {
   tags: string[];
   stockByStore: Record<string, number>;
   substituteId?: string;
+  /** Pagina do produto no site da Leroy Merlin. */
+  url?: string;
 };
 
 export type ProjectItem = {

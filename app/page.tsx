@@ -22,7 +22,7 @@ import {
   WrenchIcon,
   ZapIcon,
 } from "@/components/Icons";
-import { CATALOG, getStockForStore } from "@/lib/catalog";
+import { CATALOG, getProductById, getStockForStore } from "@/lib/catalog";
 import { getStoreById } from "@/lib/stores";
 import { getSelectedStoreId, getStoredTickets } from "@/lib/telemetry";
 import { Product, ProjectItem } from "@/lib/types";
@@ -44,7 +44,7 @@ const QUICK_SCENARIOS = [
     title: "Vazamento ou torneira",
     hint: "Diagnóstico em 15s",
     prompt: "Minha torneira está pingando",
-    image: "/products/hid-torneira-mono.jpg",
+    productId: "hid-torneira-mono",
   },
   {
     corridor: "C09",
@@ -52,7 +52,7 @@ const QUICK_SCENARIOS = [
     title: "Pintar um cômodo",
     hint: "Calcula litros por m²",
     prompt: "Quero pintar um quarto azul de 3x4m",
-    image: "/products/tin-acrilica-18l-azul.jpg",
+    productId: "tin-acrilica-18l-azul",
   },
   {
     corridor: "C16",
@@ -60,7 +60,7 @@ const QUICK_SCENARIOS = [
     title: "Instalar prateleira",
     hint: "Alvenaria ou drywall",
     prompt: "Quero instalar uma prateleira na parede",
-    image: "/products/fix-prateleira-mdf.jpg",
+    productId: "fix-prateleira-mdf",
   },
   {
     corridor: "C19",
@@ -68,8 +68,16 @@ const QUICK_SCENARIOS = [
     title: "Chuveiro ou LED",
     hint: "Troca segura 220V",
     prompt: "Meu chuveiro parou de esquentar",
-    image: "/products/ele-chuveiro-eletronico.jpg",
+    productId: "ele-chuveiro-eletronico",
   },
+];
+
+const COMMON_REQUESTS = [
+  "Pia entupida",
+  "Descarga não para de encher",
+  "Rejunte do box mofado",
+  "Portão de ferro enferrujado",
+  "Porta rangendo",
 ];
 
 const FEATURED_PRODUCT_IDS = [
@@ -133,9 +141,8 @@ export default function StoreModeHomePage() {
     <main className="flex flex-1 flex-col bg-floor">
       <StoreBar />
 
-      {/* ===== 1. HERO EDITORIAL FOTOGRÁFICO ESCURO (ESTILO REFERÊNCIA) ===== */}
+      {/* ===== 1. HERO EDITORIAL FOTOGRÁFICO ESCURO ===== */}
       <section className="relative overflow-hidden bg-signage text-white">
-        {/* Foto editorial à direita com fusão suave no escuro */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/brand/hero-editorial.jpg"
@@ -149,10 +156,12 @@ export default function StoreModeHomePage() {
         />
 
         <div className="container-wide relative z-10 pb-16 pt-10 md:pb-20 md:pt-14">
-          <div className="max-w-[540px]">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[12px] font-medium text-white/90 backdrop-blur-sm">
-              <MapPinIcon size={13} className="text-leroy" />
-              <span className="truncate">{activeStore.name}</span>
+          <div className="max-w-[560px]">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[12px] font-medium text-white/90 backdrop-blur-sm">
+              <MapPinIcon size={13} className="flex-shrink-0 text-leroy" />
+              <span className="truncate">
+                Você está na <strong className="font-semibold text-white">{activeStore.name}</strong>
+              </span>
             </div>
 
             <h1 className="mt-4 font-display text-[32px] font-extrabold leading-[1.08] tracking-tight text-white sm:text-[44px]">
@@ -160,7 +169,7 @@ export default function StoreModeHomePage() {
             </h1>
 
             <p className="mt-3 max-w-[460px] text-[15px] leading-relaxed text-white/75">
-              Descreva o problema do seu jeito, fale no microfone ou fotografe a peça — achamos o produto, o estoque e o corredor exato.
+              Descreva o problema do seu jeito, fale no microfone ou fotografe a peça — achamos o produto real, o corredor e o checkout sem fila.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -221,18 +230,39 @@ export default function StoreModeHomePage() {
 
             <button
               type="submit"
-              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-leroy-cta px-6 text-[14px] font-semibold text-white shadow-sm transition hover:bg-leroy-dark sm:flex-initial"
+              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-leroy-cta px-6 text-[14px] font-semibold text-white shadow-sm transition hover:bg-leroy-deep sm:flex-initial"
             >
               <SearchIcon size={15} />
               <span>Buscar</span>
             </button>
           </div>
         </form>
+
+        {/* Pedidos comuns de 1 toque (inclui os novos projetos: rejunte, portão, descarga, pia entupida) */}
+        <div
+          role="group"
+          aria-labelledby="pedidos-comuns"
+          className="mt-3 flex flex-wrap items-center gap-1.5"
+        >
+          <span id="pedidos-comuns" className="mr-1 text-[12px] font-medium text-signage-subtle">
+            Pedidos comuns:
+          </span>
+          {COMMON_REQUESTS.map((req) => (
+            <button
+              key={req}
+              type="button"
+              onClick={() => launchQuery(req)}
+              className="inline-flex min-h-[36px] items-center rounded-full border border-rule bg-white px-3 text-[12px] font-medium text-signage-muted transition hover:border-leroy hover:text-leroy-deep"
+            >
+              {req}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ===== CONTEÚDO PRINCIPAL EM SEÇÕES BRANCAS ELEVADAS ===== */}
-      <div className="container-wide space-y-8 py-8">
-        {/* 3. Dock de 7 Categorias com Ícones (estilo referência) */}
+      <div className="container-wide space-y-8 py-7">
+        {/* 3. Dock de 7 Departamentos com Ícones */}
         <section aria-label="Departamentos">
           <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-7 sm:gap-3">
             {DEPARTMENTS.map(({ label, cat, Icon }) => (
@@ -260,12 +290,12 @@ export default function StoreModeHomePage() {
                 Comece pelo problema
               </h2>
               <p className="mt-0.5 text-[13px] text-signage-muted">
-                Escolha um cenário pronto para gerar lista, orçamento e rota na loja
+                Escolha um cenário pronto para gerar lista por corredor, orçamento e checkout expresso
               </p>
             </div>
             <Link
               href="/chat"
-              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-leroy-cta px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-leroy-dark"
+              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-leroy-cta px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-leroy-deep"
             >
               Abrir assistente
               <ArrowRightIcon size={14} />
@@ -273,39 +303,44 @@ export default function StoreModeHomePage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-            {QUICK_SCENARIOS.map(({ corridor, sector, title, hint, prompt, image }) => (
-              <Link
-                key={corridor}
-                href={`/chat?q=${encodeURIComponent(prompt)}`}
-                className="group flex flex-col overflow-hidden rounded-xl border border-rule/80 bg-floor/40 transition duration-200 hover:-translate-y-0.5 hover:border-leroy/70 hover:bg-white hover:shadow-card-hover"
-              >
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-floor">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={image}
-                    alt={title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
-                  />
-                  <span className="aisle-plate absolute left-2.5 top-2.5 shadow-sm">
-                    {corridor}
-                  </span>
-                </div>
-                <div className="p-3.5">
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-leroy-deep">
-                    {sector}
+            {QUICK_SCENARIOS.map(({ corridor, sector, title, hint, prompt, productId }) => {
+              const prod = getProductById(productId);
+              return (
+                <Link
+                  key={corridor}
+                  href={`/chat?q=${encodeURIComponent(prompt)}`}
+                  className="group flex flex-col overflow-hidden rounded-xl border border-rule/80 bg-white transition duration-200 hover:-translate-y-0.5 hover:border-leroy/70 hover:shadow-card-hover"
+                >
+                  <div className="relative flex aspect-[16/10] w-full items-center justify-center overflow-hidden border-b border-rule/60 bg-white p-2.5">
+                    {prod?.imageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={prod.imageUrl}
+                        alt={title}
+                        loading="lazy"
+                        className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.05]"
+                      />
+                    )}
+                    <span className="aisle-plate absolute left-2.5 top-2.5 shadow-sm">
+                      {corridor}
+                    </span>
                   </div>
-                  <div className="mt-0.5 font-display text-[14.5px] font-bold leading-snug text-signage group-hover:text-leroy-deep">
-                    {title}
+                  <div className="p-3.5">
+                    <div className="text-[11px] font-semibold uppercase tracking-wider text-leroy-deep">
+                      {sector}
+                    </div>
+                    <div className="mt-0.5 font-display text-[14.5px] font-bold leading-snug text-signage group-hover:text-leroy-deep">
+                      {title}
+                    </div>
+                    <div className="mt-1 text-[12px] text-signage-muted">{hint}</div>
                   </div>
-                  <div className="mt-1 text-[12px] text-signage-muted">{hint}</div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </section>
 
-        {/* 5. Banner Visual de Destaque: Planta 2D & Etiqueta ESL (estilo banner central da referência) */}
+        {/* 5. Banner Visual de Destaque: Planta 2D, Etiqueta ESL & Checkout Sem Fila */}
         <section className="relative overflow-hidden rounded-2xl bg-signage text-white shadow-card">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -325,10 +360,10 @@ export default function StoreModeHomePage() {
                 Planta 2D · {activeStore.shortName}
               </span>
               <h2 className="mt-3 font-display text-[22px] font-extrabold leading-tight text-white sm:text-[26px]">
-                Ache a prateleira exata sem rodar pela loja.
+                Ache a prateleira exata e saia sem fila.
               </h2>
               <p className="mt-1.5 text-[13.5px] leading-relaxed text-white/75">
-                Veja a rota pelos corredores no mapa 2D e acenda o LED verde na etiqueta eletrônica direto no produto.
+                Veja a rota pelos corredores no mapa 2D, acenda a etiqueta no produto e finalize no Checkout Expresso com Pix 5% OFF.
               </p>
             </div>
 
@@ -338,16 +373,16 @@ export default function StoreModeHomePage() {
                 <ArrowRightIcon size={15} />
               </Link>
               <Link
-                href="/lista?id=instalar-prateleira"
+                href="/checkout?id=instalar-prateleira"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white/25 bg-white/10 px-4 py-2.5 text-[13px] font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                Exemplo de lista
+                Checkout Sem Fila
               </Link>
             </div>
           </div>
         </section>
 
-        {/* 6. Seção Branca Elevada: Destaques em Estoque */}
+        {/* 6. Seção Branca Elevada: Destaques em Estoque (63 produtos oficiais Leroy) */}
         <section className="panel p-5 sm:p-6">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -355,12 +390,12 @@ export default function StoreModeHomePage() {
                 Destaques em {activeStore.shortName}
               </h2>
               <p className="mt-0.5 text-[13px] text-signage-muted">
-                Produtos reais em estoque com corredor e localização na prateleira
+                Produtos oficiais da Leroy Merlin com foto real, código e link do site
               </p>
             </div>
             <Link
               href="/catalogo"
-              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-leroy-cta px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-leroy-dark"
+              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-leroy-cta px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-leroy-deep"
             >
               Ver todos ({CATALOG.length})
             </Link>
@@ -420,14 +455,14 @@ export default function StoreModeHomePage() {
         </section>
       </div>
 
-      {/* ===== 7. RODAPÉ ESCURO INSTITUCIONAL (ESTILO REFERÊNCIA) ===== */}
+      {/* ===== 7. RODAPÉ ESCURO INSTITUCIONAL ===== */}
       <footer className="mt-auto bg-signage text-white">
         <div className="container-wide grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
             <Logo variant="dark" />
             <p className="text-[12.5px] leading-relaxed text-white/60">
               Assistente de autoatendimento em loja física para a unidade{" "}
-              <span className="text-white/85">{activeStore.name}</span>. Projeto Challenge FIAP 2026 — Grupo Tech_01.
+              <span className="text-white/85">{activeStore.name}</span>. Challenge FIAP 2026 — Grupo Tech_01.
             </p>
           </div>
 
@@ -466,12 +501,12 @@ export default function StoreModeHomePage() {
               </li>
               <li>
                 <Link href="/lista?id=instalar-prateleira" className="transition hover:text-leroy">
-                  Lista Auditada (Demo)
+                  Lista por Corredor (Demo)
                 </Link>
               </li>
               <li>
-                <Link href="/catalogo?cat=Hidráulica" className="transition hover:text-leroy">
-                  Setor de Hidráulica
+                <Link href="/checkout?id=instalar-prateleira" className="transition hover:text-leroy">
+                  Checkout Expresso Sem Fila
                 </Link>
               </li>
             </ul>
@@ -505,7 +540,7 @@ export default function StoreModeHomePage() {
         <div className="border-t border-white/10">
           <div className="container-wide flex flex-wrap items-center justify-between gap-2 py-4 text-[11.5px] text-white/45">
             <span>LM Copiloto v2 · Challenge FIAP 2026 · Grupo Tech_01</span>
-            <span>Protótipo acadêmico de experiência em loja física</span>
+            <span>Protótipo: preços de referência, estoque e planta ilustrativos</span>
           </div>
         </div>
       </footer>

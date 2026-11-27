@@ -64,7 +64,12 @@
   { "cat": "fora-catalogo", "q": "quero comprar uma geladeira", "ok": ["resposta", "chamado"] },
   { "cat": "fora-catalogo", "q": "porcelanato 60x60 pra sala", "ok": ["resposta", "chamado"] },
   { "cat": "fora-catalogo", "q": "telha pra consertar o telhado", "ok": ["resposta", "chamado"], "safety": "altura" },
-  { "cat": "fora-catalogo", "q": "vaso sanitário com caixa acoplada", "ok": ["resposta", "chamado"] },
+  { "cat": "hidraulica", "q": "a descarga não para de encher", "ok": ["lista"], "ids": ["reparo-caixa-acoplada", "hid-reparo-caixa"] },
+  { "cat": "hidraulica", "q": "ralo do box entupido", "ok": ["lista"], "ids": ["desentupir-pia", "hid-desentupidor"] },
+  { "cat": "pintura", "q": "quero pintar o portão de ferro", "ok": ["lista"], "ids": ["pintar-portao", "tin-esmalte-preto"] },
+  { "cat": "trinca", "q": "rejunte do box está preto", "ok": ["lista"], "ids": ["refazer-rejunte", "mat-rejunte-branco"] },
+  { "cat": "eletrica", "q": "tomada soltou da parede", "ok": ["lista", "resposta"], "ids": ["ele-tomada"], "safety": "eletrica" },
+  { "cat": "hidraulica", "q": "vaso sanitário com caixa acoplada", "ok": ["lista"], "ids": ["hid-vaso-acoplado"] },
   { "cat": "fora-catalogo", "q": "ar-condicionado split 12 mil btus", "ok": ["resposta", "chamado"] },
 
   { "cat": "fora-escopo", "q": "qual a capital da França?", "ok": ["resposta"] },

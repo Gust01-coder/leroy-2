@@ -140,6 +140,13 @@ export type CopilotReplyPayload = {
  * Suporta múltiplos domínios, cálculo dinâmico de medidas, busca semântica aberta
  * e abertura real de ticket de Handoff Humano com resumo da conversa.
  */
+const QUICK_PRESETS: Array<[RegExp, string]> = [
+  [/rejunt/, "refazer-rejunte"],
+  [/(portao|grade|gradil).*(ferro|pint|ferrug)|(pint|ferrug).*(portao|grade|gradil)/, "pintar-portao"],
+  [/descarga|nao para de encher|caixa acoplada.*(vaza|enche|escorr)|(vaza|escorr).*caixa acoplada/, "reparo-caixa-acoplada"],
+  [/entup/, "desentupir-pia"],
+];
+
 export const RISKS = ["nenhum", "eletrica", "gas", "estrutura", "altura"] as const;
 export type Risk = (typeof RISKS)[number];
 
@@ -525,7 +532,7 @@ export function processCopilotMessage(
       response: {
         text: `Beleza! Se o chuveiro liga mas sai água fria, em 90% das vezes é só a **resistência rompida**.\n\nMontei o kit seguro (**${formatTotal(
           project
-        )}**) já com **conector Wago 32A** (evita emenda derretida) e **tutorial com alerta do disjuntor**.`,
+        )}**) já com **conector de emenda Wago** (evita emenda derretida) e **tutorial com alerta do disjuntor**.`,
         actionProject: project,
       },
       newContext: newCtx,
@@ -533,6 +540,43 @@ export function processCopilotMessage(
   }
 
   // ================= DETECÇÃO DE INTENÇÃO INICIAL =================
+
+  // Projetos prontos com gatilho direto (antes das intencoes genericas que os capturariam).
+  const quick = QUICK_PRESETS.find(([re]) => re.test(n));
+  if (quick) {
+    const project = getPresetProject(quick[1], storeId)!;
+    return {
+      painTopic: project.title,
+      response: {
+        text: `Montei o projeto **${project.title}** (**${formatTotal(project)}**) com os itens certos e o passo a passo.`,
+        actionProject: project,
+      },
+      newContext: newCtx,
+    };
+  }
+
+  if (/tomada/.test(n) && !/chuveiro|esquent|queim|faisc|choque|derret/.test(n)) {
+    const project = buildProductListProject(
+      storeId,
+      input,
+      [
+        { productId: "ele-tomada", reason: "Tomada nova no padrão brasileiro" },
+        { productId: "ele-chave-teste", reason: "Confirma que a energia está desligada" },
+        { productId: "ele-fita-isolante", reason: "Isola as pontas dos fios" },
+        { productId: "fer-chave-fenda", reason: "Solta e fixa os parafusos da tomada" },
+      ],
+      "eletrica"
+    );
+    return {
+      painTopic: "Tomada",
+      response: {
+        text: `Separei a **tomada nova** e os itens para trocar com segurança (**${formatTotal(project)}**).\n\n${SAFETY_NOTES.eletrica}`,
+        actionProject: project,
+        suggestions: ["Chamar técnico de elétrica", "Resolver outro projeto"],
+      },
+      newContext: newCtx,
+    };
+  }
 
   // A. Torneira / Vazamento / Sifão
   if (/torneira|pinga|vazand|vazamento|gotej|sifao|borrachinha|carrapeta/.test(n)) {
@@ -661,7 +705,7 @@ export function processCopilotMessage(
       return {
         painTopic: "Instalar prateleira",
         response: {
-          text: `Para parede de **drywall**, a bucha comum espanaria — selecionei buchas especiais borboleta + suportes reforçados + nível (**${formatTotal(
+          text: `Para parede de **drywall**, a bucha comum espanaria — selecionei buchas próprias para drywall + suportes reforçados + nível (**${formatTotal(
             project
           )}**).`,
           actionProject: project,
@@ -709,7 +753,7 @@ export function processCopilotMessage(
       response: {
         text: `Montei um kit de **Iluminação LED** (**${formatTotal(
           project
-        )}**) com painel 18W luz neutra 4000K (economiza até 85% de energia), itens de segurança elétrica e passo a passo de instalação.`,
+        )}**) com painel LED 18W de luz branca (gasta bem menos energia), itens de segurança elétrica e passo a passo de instalação.`,
         actionProject: project,
       },
       newContext: newCtx,

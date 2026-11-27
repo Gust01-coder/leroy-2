@@ -116,7 +116,7 @@ export const SEED_EVENTS: AnalyticsEvent[] = [
     type: "esl_blink_triggered",
     storeId: "es-vitoria",
     timestamp: hoursAgo(0.9),
-    label: "ESL Pick-to-Light acionado: Conector Wago 221 32A (E1 · Mód. 04)",
+    label: "ESL Pick-to-Light acionado: Conector de Emenda Wago (E1 · Mód. 04)",
     aisle: "E1",
     painTopic: "Chuveiro / Resistência",
   },

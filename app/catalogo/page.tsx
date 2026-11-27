@@ -92,7 +92,7 @@ function CatalogoInner() {
       semanticSearchCatalog(query, storeId, {
         category,
         onlyInStock,
-        limit: 45,
+        limit: 100,
       }),
     [query, storeId, category, onlyInStock]
   );
@@ -197,6 +197,9 @@ function CatalogoInner() {
               {matches.length} {matches.length === 1 ? "produto" : "produtos"}
             </span>
           </div>
+          <p className="mt-1 text-[12px] text-signage-subtle">
+            Produtos, códigos e fotos do site da Leroy Merlin. Preços de referência; estoque e corredor ilustrativos.
+          </p>
 
           {/* Barra de busca + voz */}
           <div className="mt-3.5 flex gap-2">

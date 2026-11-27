@@ -395,24 +395,37 @@ function ChatInner() {
                         {msg.actionProject.title}
                       </div>
 
-                      {/* Galeria rápida com fotos reais dos itens do kit */}
-                      <div className="mt-2.5 flex items-center gap-1.5 overflow-x-auto pb-1">
-                        {msg.actionProject.items.slice(0, 6).map((it) => (
-                          <div
-                            key={it.productId}
-                            title={`${it.brand} — ${it.name}`}
-                            className="flex-shrink-0"
-                          >
+                      {/* Cada item com foto, corredor e preco para decidir sem abrir a lista */}
+                      <ul className="mt-2.5 divide-y divide-rule rounded-md border border-rule bg-white">
+                        {msg.actionProject.items.slice(0, 4).map((it) => (
+                          <li key={it.productId} className="flex items-center gap-2.5 px-2.5 py-2">
                             <ProductThumb
                               src={it.imageUrl}
-                              alt={it.name}
+                              alt=""
                               category={it.category}
-                              size={46}
+                              size={40}
                               className="p-0.5"
                             />
-                          </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="truncate text-[12.5px] font-semibold text-signage">{it.name}</div>
+                              <div className="text-[11px] text-signage-muted">
+                                <span className="font-mono font-bold text-signage">{it.corridorCode}</span>
+                                {" · "}
+                                {it.inStock ? `${it.stockQty} un.` : <span className="font-semibold text-danger">Sem estoque</span>}
+                                {it.optional && " · Opcional"}
+                              </div>
+                            </div>
+                            <span className="flex-shrink-0 font-mono text-[12.5px] font-bold tabular-nums text-signage">
+                              {formatBRL(it.price * it.quantity)}
+                            </span>
+                          </li>
                         ))}
-                      </div>
+                        {msg.actionProject.items.length > 4 && (
+                          <li className="px-2.5 py-1.5 text-[11.5px] font-medium text-signage-muted">
+                            + {msg.actionProject.items.length - 4} itens na lista completa
+                          </li>
+                        )}
+                      </ul>
 
                       <div className="mt-2 flex flex-wrap items-center gap-2 font-mono text-[11px]">
                         <span className="badge-stock-ok">
@@ -506,17 +519,22 @@ function ChatInner() {
 
               {msg.role === "assistant" && msg.suggestions && msg.suggestions.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pl-[38px]">
-                  {msg.suggestions.map((sug) => (
-                    <button
-                      key={sug}
-                      type="button"
-                      onClick={() => handleSuggestion(sug)}
-                      disabled={loading}
-                      className="chip"
-                    >
-                      {sug}
-                    </button>
-                  ))}
+                  {msg.suggestions.map((sug) => {
+                    // Pedido de pessoa vira acao principal: chega em risco ou quando a resposta nao bastou.
+                    const human = /chamar|especialista|t[ée]cnico|vendedor/i.test(sug);
+                    return (
+                      <button
+                        key={sug}
+                        type="button"
+                        onClick={() => handleSuggestion(sug)}
+                        disabled={loading}
+                        className={human ? "btn-primary min-h-[44px] !px-3.5 !py-2 !text-[13px]" : "chip"}
+                      >
+                        {human && <UserCheckIcon size={14} />}
+                        {sug}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>

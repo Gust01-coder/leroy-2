@@ -118,13 +118,13 @@ export function StoreMap({
           <span className="truncate">
             {isHeatmap
               ? "Planta 2D · Mapa de Calor de Demanda"
-              : "Planta da loja"}
+              : "Planta ilustrativa da loja"}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="hidden font-mono text-[9.5px] text-white/55 sm:inline">
-            15.700m² · 15 SETORES
+            PLANTA ILUSTRATIVA
           </span>
           <div className="inline-flex overflow-hidden rounded border border-white/15 font-mono text-[10px]">
             <button

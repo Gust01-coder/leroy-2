@@ -99,7 +99,7 @@ const TIERS_BY_INTENT: Record<string, TierOption[]> = {
       tagline: "Somente troca da resistência + Wago",
       durability: "Reparo rápido",
       specs: [
-        { productId: "ele-resistencia-univ", quantity: 1, reason: "Refil blindado 220V" },
+        { productId: "ele-resistencia-univ", quantity: 1, reason: "Resistência original 220V" },
         { productId: "ele-conector-wago", quantity: 1, reason: "Segurança contra derretimento" },
         { productId: "ele-chave-teste", quantity: 1, reason: "Confirma circuito desligado" },
       ],
@@ -110,8 +110,8 @@ const TIERS_BY_INTENT: Record<string, TierOption[]> = {
       tagline: "Chuveiro eletrônico novo + kit seguro",
       durability: "5+ anos · controle gradual",
       specs: [
-        { productId: "ele-chuveiro-eletronico", quantity: 1, reason: "Grande espalhador 7500W" },
-        { productId: "ele-conector-wago", quantity: 1, reason: "Emenda certificada 32A" },
+        { productId: "ele-chuveiro-eletronico", quantity: 1, reason: "Controle gradual 7500W" },
+        { productId: "ele-conector-wago", quantity: 1, reason: "Emenda segura a mola" },
         { productId: "hid-veda-rosca", quantity: 1, reason: "Veda o cano de entrada" },
         { productId: "ele-chave-teste", quantity: 1, reason: "Segurança na instalação" },
       ],
@@ -124,7 +124,7 @@ const TIERS_BY_INTENT: Record<string, TierOption[]> = {
       specs: [
         { productId: "ele-chuveiro-eletronico", quantity: 1, reason: "Chuveiro eletrônico 7500W" },
         { productId: "ele-resistencia-univ", quantity: 1, reason: "Peça reserva pronta em casa" },
-        { productId: "ele-conector-wago", quantity: 1, reason: "Conector Wago 32A" },
+        { productId: "ele-conector-wago", quantity: 1, reason: "Conector de emenda Wago" },
         { productId: "ele-fita-isolante", quantity: 1, reason: "Acabamento isolante antichama" },
         { productId: "ele-chave-teste", quantity: 1, reason: "Chave teste digital" },
       ],
@@ -193,7 +193,7 @@ export function materializeTierItems(
           ? {
               ...s,
               productId: "fix-bucha-drywall",
-              reason: "Bucha borboleta própria para gesso/drywall",
+              reason: "Bucha própria para gesso/drywall",
             }
           : s
       )
@@ -272,7 +272,7 @@ const INSTALL_SERVICES: Record<string, InstallServiceOption> = {
     estimatedDuration: "Até 1h",
     includes: [
       "Auditoria do disjuntor e fiação",
-      "Conexão segura com Wago 32A",
+      "Conexão segura com conector Wago",
       "Garantia de 12 meses",
     ],
   },

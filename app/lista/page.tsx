@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Fragment, Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { StoreBar } from "@/components/StoreBar";
@@ -25,6 +25,7 @@ import { getProductById } from "@/lib/catalog";
 import { auditProjectCompatibility } from "@/lib/compatibilityEngine";
 import { equivalentQuantity, getPresetProject, materializeProjectItems } from "@/lib/projects";
 import { getStoreById } from "@/lib/stores";
+import { corridorOf, optimizeAisleOrder } from "@/lib/storeMap";
 import {
   getDynamicProject,
   getSelectedStoreId,
@@ -356,6 +357,11 @@ function ListaInner() {
 
   const activeStore = getStoreById(storeId);
   const activeTierObj = tiers.find((t) => t.id === project.activeTier);
+  // Mesma ordem da rota do mapa: a lista vira roteiro de coleta corredor a corredor.
+  const routeOrder = optimizeAisleOrder(Array.from(new Set(project.items.map((i) => i.aisle))));
+  const itemsByRoute = [...project.items].sort(
+    (a, b) => routeOrder.indexOf(a.aisle) - routeOrder.indexOf(b.aisle)
+  );
   const progressPct =
     activeItems.length > 0
       ? Math.round((checkedCount / activeItems.length) * 100)
@@ -394,7 +400,7 @@ function ListaInner() {
               <div className="flex items-baseline justify-between">
                 <span className="text-[11.5px] text-white/65">Total estimado</span>
                 <span className="font-mono text-[11px] text-white/65">
-                  {checkedCount}/{activeItems.length} no carrinho
+                  {checkedCount}/{activeItems.length} coletados
                 </span>
               </div>
               <div className="mt-1 font-mono text-[26px] font-extrabold leading-none tabular-nums text-leroy">
@@ -453,6 +459,7 @@ function ListaInner() {
                         key={tier.id}
                         type="button"
                         onClick={() => switchTier(tier.id)}
+                        aria-pressed={active}
                         className={`rounded-md px-3 py-1.5 text-[12px] font-semibold transition ${
                           active
                             ? "bg-leroy text-signage"
@@ -479,14 +486,30 @@ function ListaInner() {
             {/* ABA 1: LISTA DE ITENS (LIMPA E ESCANEÁVEL) */}
             {activeTab === "itens" && (
               <div className="space-y-2.5">
-                {project.items.map((item) => {
+                {itemsByRoute.map((item, idx) => {
                   const isOptionalExcluded =
                     Boolean(item.optional) && !includedOptionals[item.productId];
                   const isChecked = Boolean(checkedIds[item.productId]);
+                  const group =
+                    idx === 0 || itemsByRoute[idx - 1].aisle !== item.aisle
+                      ? itemsByRoute.filter(
+                          (i) => i.aisle === item.aisle && (!i.optional || includedOptionals[i.productId])
+                        )
+                      : null;
 
                   return (
+                    <Fragment key={item.productId}>
+                    {group && (
+                      <h3 className={`flex items-center gap-2 ${idx > 0 ? "pt-2" : ""}`}>
+                        <span className="aisle-plate">Corredor {item.corridorCode ?? corridorOf(item.aisle)}</span>
+                        {group.length > 0 && (
+                          <span className="text-[12px] font-medium text-signage-muted">
+                            {group.filter((i) => checkedIds[i.productId]).length}/{group.length} coletados
+                          </span>
+                        )}
+                      </h3>
+                    )}
                     <div
-                      key={item.productId}
                       className={`rounded-xl border bg-white p-3.5 transition ${
                         isChecked
                           ? "border-leroy bg-leroy-soft/20"
@@ -500,7 +523,8 @@ function ListaInner() {
                           <button
                             type="button"
                             onClick={() => toggleChecked(item)}
-                            aria-label={`Marcar ${item.name} no carrinho`}
+                            aria-label={`Marcar ${item.name} como coletado`}
+                            aria-pressed={isChecked}
                             className={`relative flex h-6 w-6 flex-shrink-0 items-center justify-center rounded border-2 transition before:absolute before:-inset-2.5 before:content-[''] ${
                               isChecked
                                 ? "border-leroy bg-leroy text-signage"
@@ -539,6 +563,10 @@ function ListaInner() {
                           >
                             {item.name}
                           </div>
+
+                          {item.reason && (
+                            <div className="mt-0.5 text-[12px] text-signage-muted">{item.reason}</div>
+                          )}
 
                           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-signage-muted">
                             <span className="font-mono font-bold text-signage">
@@ -655,6 +683,7 @@ function ListaInner() {
                         </div>
                       )}
                     </div>
+                    </Fragment>
                   );
                 })}
               </div>

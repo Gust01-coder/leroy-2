@@ -47,11 +47,11 @@
            transition hover:border-signage/50 hover:bg-floor active:translate-y-[0.5px] disabled:opacity-40;
   }
 
-  /* Botão CTA verde oficial Leroy Merlin (alto contraste branco sobre verde) */
+  /* Botão CTA verde oficial Leroy Merlin (contraste AA branco sobre verde) */
   .btn-accent {
     @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-leroy-cta px-5 py-2.5
            text-[13.5px] font-semibold tracking-tight text-white shadow-sm transition
-           hover:bg-leroy-dark active:translate-y-[0.5px] disabled:pointer-events-none disabled:opacity-40;
+           hover:bg-leroy-deep active:translate-y-[0.5px] disabled:pointer-events-none disabled:opacity-40;
   }
 
   /* Placa de corredor discreta e legível */

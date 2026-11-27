@@ -4,8 +4,8 @@ import { useState } from "react";
 import { CategoryIcon } from "./CategoryIcon";
 
 /**
- * Miniatura compacta (4:3 ou quadrada) para listas, mapa, chat e etiquetas ESL.
- * Preenche o enquadramento com object-cover (sem sobras brancas desproporcionais).
+ * Miniatura quadrada limpa para fotos oficiais de estúdio (600×600) em listas,
+ * mapa, chat, checkout e etiquetas ESL.
  */
 export function ProductThumb({
   src,
@@ -28,8 +28,8 @@ export function ProductThumb({
 
   return (
     <div
-      className={`relative flex-shrink-0 overflow-hidden rounded-lg border border-rule bg-[#F4F5F7] ${className}`}
-      style={{ width: size, height: Math.round(size * 0.78) }}
+      className={`relative flex flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-rule bg-white p-1 ${className}`}
+      style={{ width: size, height: size }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -37,14 +37,15 @@ export function ProductThumb({
         alt={alt}
         loading="lazy"
         onError={() => setFailed(true)}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-contain"
       />
     </div>
   );
 }
 
 /**
- * Mídia full-bleed 4:3 para cards de catálogo e vitrine (proporção equilibrada de e-commerce).
+ * Mídia 4:3 limpa para fotos oficiais de estúdio da Leroy Merlin (600×600) em cards
+ * de catálogo e vitrine — preserva o produto inteiro sem cortes nas bordas.
  */
 export function ProductCardMedia({
   src,
@@ -62,7 +63,7 @@ export function ProductCardMedia({
   if (!src || failed) {
     return (
       <div
-        className={`flex aspect-[4/3] w-full items-center justify-center bg-[#F4F5F7] ${className}`}
+        className={`flex aspect-[4/3] w-full items-center justify-center border-b border-rule/60 bg-white ${className}`}
       >
         <CategoryIcon category={category} size={56} />
       </div>
@@ -71,7 +72,7 @@ export function ProductCardMedia({
 
   return (
     <div
-      className={`relative aspect-[4/3] w-full overflow-hidden bg-[#F4F5F7] ${className}`}
+      className={`relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden border-b border-rule/60 bg-white p-3 ${className}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -79,7 +80,7 @@ export function ProductCardMedia({
         alt={alt}
         loading="lazy"
         onError={() => setFailed(true)}
-        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+        className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"
       />
     </div>
   );
