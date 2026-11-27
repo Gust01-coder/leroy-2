@@ -17,6 +17,7 @@ import { AtendimentoTab } from "@/components/painel/AtendimentoTab";
 import { DadosTab } from "@/components/painel/DadosTab";
 import { KpiCard } from "@/components/painel/KpiCard";
 import { PlantaTab } from "@/components/painel/PlantaTab";
+import { StaffLoginGate, type StaffSession } from "@/components/painel/StaffLoginGate";
 import { TabButton } from "@/components/painel/TabButton";
 import {
   computeAnalyticsSummary,
@@ -34,8 +35,12 @@ import {
 
 type PanelTab = "atendimento" | "planta" | "dados";
 
+const STAFF_SESSION_KEY = "lm_copiloto_staff_session_v1";
+
 export default function PainelPage() {
   const [storeId, setStoreId] = useState("es-vitoria");
+  const [staffSession, setStaffSession] = useState<StaffSession | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<PanelTab>("atendimento");
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [tickets, setTickets] = useState<HandoffTicket[]>([]);
@@ -65,6 +70,14 @@ export default function PainelPage() {
 
   useEffect(() => {
     setStoreId(getSelectedStoreId());
+    try {
+      const saved = window.sessionStorage.getItem(STAFF_SESSION_KEY);
+      if (saved) setStaffSession(JSON.parse(saved) as StaffSession);
+    } catch {
+      // sessionStorage indisponivel
+    } finally {
+      setAuthChecked(true);
+    }
     reload();
     const timer = window.setInterval(() => {
       if (!document.hidden) reload();
@@ -146,6 +159,44 @@ export default function PainelPage() {
   const maxPainCount = Math.max(1, ...summary.topPains.map((p) => p.count));
   const visibleEvents = showAllEvents ? events : events.slice(0, 8);
 
+  function handleStaffLogin(session: StaffSession) {
+    setStaffSession(session);
+    try {
+      window.sessionStorage.setItem(STAFF_SESSION_KEY, JSON.stringify(session));
+    } catch {
+      // ignora em modo privado restrito
+    }
+  }
+
+  function handleStaffLogout() {
+    setStaffSession(null);
+    try {
+      window.sessionStorage.removeItem(STAFF_SESSION_KEY);
+    } catch {
+      // ignora
+    }
+  }
+
+  if (!authChecked) {
+    return (
+      <div className="flex min-h-screen flex-col bg-floor">
+        <StoreBar />
+      </div>
+    );
+  }
+
+  if (!staffSession) {
+    return (
+      <div className="flex min-h-screen flex-col bg-floor">
+        <StoreBar />
+        <StaffLoginGate
+          storeName={activeStore.name}
+          onAuthenticated={handleStaffLogin}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-floor">
       <StoreBar />
@@ -156,18 +207,18 @@ export default function PainelPage() {
           <div>
             <div className="inline-flex items-center gap-2 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-leroy">
               <span className="h-2 w-2 rounded-full bg-leroy" />
-              Console do Vendedor · Operações
+              Console do Vendedor · {staffSession.name} ({staffSession.badgeId})
             </div>
             <h1 className="mt-1 font-display text-[24px] font-extrabold text-white sm:text-[28px]">
               {activeStore.name}
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={exportCsv}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-signage-soft px-3 py-2 text-[12px] font-semibold text-white transition hover:border-leroy hover:text-leroy"
+              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-white/20 bg-signage-soft px-3 py-2 text-[12px] font-semibold text-white transition hover:border-leroy hover:text-leroy"
             >
               <DownloadIcon size={14} />
               CSV
@@ -175,10 +226,17 @@ export default function PainelPage() {
             <button
               type="button"
               onClick={exportJson}
-              className="btn-accent !px-3.5 !py-2 !text-[12px]"
+              className="btn-accent !min-h-[40px] !px-3.5 !py-2 !text-[12px]"
             >
               <DownloadIcon size={14} />
               JSON
+            </button>
+            <button
+              type="button"
+              onClick={handleStaffLogout}
+              className="inline-flex min-h-[40px] items-center rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-[12px] font-semibold text-white/75 transition hover:border-white/40 hover:text-white"
+            >
+              Sair
             </button>
           </div>
         </div>
