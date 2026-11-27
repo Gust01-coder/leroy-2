@@ -5,23 +5,18 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { StoreBar } from "@/components/StoreBar";
 import { EslShelfModal } from "@/components/EslShelfModal";
-import { ProductThumb } from "@/components/ProductThumb";
+import { AuditPanel } from "@/components/lista/AuditPanel";
+import { ListItemCard } from "@/components/lista/ListItemCard";
+import { InstallServiceCard } from "@/components/lista/InstallServiceCard";
+import { TutorialSteps } from "@/components/lista/TutorialSteps";
 import {
   ArrowRightIcon,
   BookOpenIcon,
   CheckCircleIcon,
-  CheckIcon,
-  CloseIcon,
   MapIcon,
-  MinusIcon,
-  PlusIcon,
-  RadioIcon,
-  RefreshIcon,
-  ShieldAlertIcon,
-  ShieldCheckIcon,
-  WrenchIcon,
 } from "@/components/Icons";
 import { getProductById } from "@/lib/catalog/catalog";
+import { formatBRL } from "@/lib/format";
 import { auditProjectCompatibility } from "@/lib/catalog/compatibilityEngine";
 import { equivalentQuantity, getPresetProject, materializeProjectItems } from "@/lib/catalog/projects";
 import { getStoreById } from "@/lib/store/stores";
@@ -43,13 +38,6 @@ import {
   DynamicProjectList,
   ProjectItem,
 } from "@/lib/types";
-
-function formatBRL(value: number) {
-  return value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-}
 
 // Rematerializa pelo catalogo: preco, corredor e substituto sempre da loja atual.
 function syncItemsWithStore(items: ProjectItem[], storeId: string): ProjectItem[] {
@@ -509,180 +497,18 @@ function ListaInner() {
                         )}
                       </h3>
                     )}
-                    <div
-                      className={`rounded-xl border bg-white p-3.5 transition ${
-                        isChecked
-                          ? "border-leroy bg-leroy-soft/20"
-                          : isOptionalExcluded
-                          ? "border-rule opacity-70"
-                          : "border-rule"
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center gap-3.5 sm:flex-nowrap">
-                        {!isOptionalExcluded && (
-                          <button
-                            type="button"
-                            onClick={() => toggleChecked(item)}
-                            aria-label={`Marcar ${item.name} como coletado`}
-                            aria-pressed={isChecked}
-                            className={`relative flex h-6 w-6 flex-shrink-0 items-center justify-center rounded border-2 transition before:absolute before:-inset-2.5 before:content-[''] ${
-                              isChecked
-                                ? "border-leroy bg-leroy text-signage"
-                                : "border-rule-strong bg-white hover:border-signage"
-                            }`}
-                          >
-                            {isChecked && <CheckIcon size={12} strokeWidth={3} />}
-                          </button>
-                        )}
-
-                        <ProductThumb
-                          src={item.imageUrl}
-                          alt={item.name}
-                          category={item.category}
-                          size={76}
-                        />
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 text-[10.5px]">
-                            <span className="font-mono font-bold uppercase text-signage-subtle">
-                              {item.brand}
-                            </span>
-                            {item.optional && (
-                              <span className="rounded bg-floor px-1.5 py-0.5 font-mono text-[9.5px] font-semibold text-signage-muted">
-                                Opcional
-                              </span>
-                            )}
-                          </div>
-
-                          <div
-                            className={`mt-0.5 text-[14.5px] font-bold leading-snug ${
-                              isChecked
-                                ? "text-signage-subtle line-through"
-                                : "text-signage"
-                            }`}
-                          >
-                            {item.name}
-                          </div>
-
-                          {item.reason && (
-                            <div className="mt-0.5 text-[12px] text-signage-muted">{item.reason}</div>
-                          )}
-
-                          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-signage-muted">
-                            <span className="font-mono font-bold text-signage">
-                              {item.corridorCode ?? item.aisle}
-                            </span>
-                            <span>·</span>
-                            <span>{item.shelfLocation}</span>
-                            <span>·</span>
-                            <span
-                              className={
-                                !item.inStock
-                                  ? "font-semibold text-danger"
-                                  : item.stockQty <= 6
-                                  ? "font-semibold text-amberwarn"
-                                  : "text-leroy-deep"
-                              }
-                            >
-                              {item.inStock ? `${item.stockQty} un.` : "Sem estoque"}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Preço + Ações à direita */}
-                        <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:flex-shrink-0 sm:flex-col sm:items-end">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-[15px] font-extrabold tabular-nums text-signage">
-                              {formatBRL(item.price * item.quantity)}
-                            </span>
-                            {!item.optional && project.items.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => removeItem(item.productId)}
-                                title="Remover item"
-                                aria-label={`Remover ${item.name}`}
-                                className="rounded p-2 text-signage-muted transition hover:bg-danger-soft hover:text-danger"
-                              >
-                                <CloseIcon size={13} />
-                              </button>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-1.5">
-                            {item.inStock && (
-                              <button
-                                type="button"
-                                onClick={() => setEslItem(item)}
-                                title="Acender a etiqueta do produto na prateleira"
-                                className="inline-flex h-10 items-center gap-1.5 rounded-md border border-leroy/60 bg-leroy-soft px-3 text-[12.5px] font-bold text-leroy-deep transition hover:bg-leroy hover:text-signage"
-                              >
-                                <RadioIcon size={14} />
-                                Localizar
-                              </button>
-                            )}
-
-                            {item.optional ? (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setIncludedOptionals((prev) => ({
-                                    ...prev,
-                                    [item.productId]: !prev[item.productId],
-                                  }))
-                                }
-                                className={`h-10 rounded-md px-3 text-[12.5px] font-semibold transition ${
-                                  isOptionalExcluded
-                                    ? "bg-signage text-white"
-                                    : "bg-leroy-soft text-leroy-deep"
-                                }`}
-                              >
-                                {isOptionalExcluded ? "+ Incluir" : "Incluído"}
-                              </button>
-                            ) : (
-                              <div className="inline-flex h-10 items-center rounded-md border border-rule bg-floor">
-                                <button
-                                  type="button"
-                                  onClick={() => updateQty(item.productId, -1)}
-                                  aria-label={`Diminuir quantidade de ${item.name}`}
-                                  className="flex h-10 w-10 items-center justify-center text-signage-muted hover:text-signage"
-                                >
-                                  <MinusIcon size={14} />
-                                </button>
-                                <span className="min-w-[20px] text-center font-mono text-[13px] font-bold text-signage">
-                                  {item.quantity}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() => updateQty(item.productId, 1)}
-                                  aria-label={`Aumentar quantidade de ${item.name}`}
-                                  className="flex h-10 w-10 items-center justify-center text-signage-muted hover:text-signage"
-                                >
-                                  <PlusIcon size={14} />
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Substituto em 1 clique se sem estoque */}
-                      {!item.inStock && item.substituteName && (
-                        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg bg-amberwarn-soft px-3 py-2 text-[12px]">
-                          <span className="text-signage">
-                            <strong className="text-amberwarn">Substituto:</strong>{" "}
-                            {item.substituteName} ({formatBRL(item.substitutePrice ?? 0)})
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => applySubstitution(item)}
-                            className="inline-flex items-center gap-1 rounded-md bg-signage px-2.5 py-1 text-[11.5px] font-semibold text-leroy"
-                          >
-                            <RefreshIcon size={11} />
-                            Trocar
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    <ListItemCard
+                      item={item}
+                      isChecked={isChecked}
+                      isOptionalExcluded={isOptionalExcluded}
+                      canRemove={project.items.length > 1}
+                      onToggleChecked={toggleChecked}
+                      onRemove={removeItem}
+                      onOpenEsl={setEslItem}
+                      onChangeQty={updateQty}
+                      onSubstitute={applySubstitution}
+                      setIncludedOptionals={setIncludedOptionals}
+                    />
                     </Fragment>
                   );
                 })}
@@ -691,182 +517,25 @@ function ListaInner() {
 
             {/* ABA 2: TUTORIAL PÓS-COMPRA */}
             {activeTab === "tutorial" && (
-              <div className="space-y-3">
-                {project.tutorial.map((st) => {
-                  const done = Boolean(doneSteps[st.step]);
-                  return (
-                    <div
-                      key={st.step}
-                      className={`rounded-xl border bg-white p-4 transition ${
-                        done ? "border-leroy bg-leroy-soft/20" : "border-rule"
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setDoneSteps((prev) => ({
-                              ...prev,
-                              [st.step]: !prev[st.step],
-                            }))
-                          }
-                          className={`mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md font-mono text-[12px] font-extrabold transition ${
-                            done
-                              ? "bg-leroy text-signage"
-                              : "bg-signage text-leroy"
-                          }`}
-                        >
-                          {done ? <CheckIcon size={14} strokeWidth={2.8} /> : st.step}
-                        </button>
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-2">
-                            <h3
-                              className={`font-display text-[15px] font-bold ${
-                                done ? "text-signage-subtle line-through" : "text-signage"
-                              }`}
-                            >
-                              {st.title}
-                            </h3>
-                            <span className="text-[11.5px] text-signage-subtle">
-                              ~{st.durationMin} min
-                            </span>
-                          </div>
-                          <p className="mt-1 text-[13.5px] leading-relaxed text-signage-muted">
-                            {st.detail}
-                          </p>
-                          {st.safetyWarning && (
-                            <div className="mt-2.5 flex items-start gap-2 rounded-lg bg-danger-soft px-3 py-2 text-[12px] text-danger">
-                              <ShieldAlertIcon size={14} className="mt-0.5 flex-shrink-0" />
-                              <span>{st.safetyWarning}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <TutorialSteps
+                tutorial={project.tutorial}
+                doneSteps={doneSteps}
+                setDoneSteps={setDoneSteps}
+              />
             )}
           </div>
 
           {/* COLUNA LATERAL (4 cols) — CALMA E DIRETA */}
           <aside className="space-y-4 lg:col-span-4">
-            {/* Auditoria Anti-2ª Viagem */}
-            <div className="panel overflow-hidden">
-              <div
-                className={`flex items-center justify-between px-4 py-3 ${
-                  audit.alerts.some((a) => a.severity === "critical")
-                    ? "bg-danger text-white"
-                    : audit.alerts.some((a) => a.severity === "warning")
-                    ? "bg-amberwarn text-white"
-                    : "bg-signage text-white"
-                }`}
-              >
-                <div className="flex items-center gap-2 text-[12.5px] font-bold">
-                  <ShieldCheckIcon size={15} className="text-leroy" />
-                  Conferência da lista
-                </div>
-                <span className="font-mono text-[12px] font-extrabold">
-                  {audit.score}%
-                </span>
-              </div>
-
-              <div className="p-4">
-                <p className="text-[13px] font-semibold text-signage">
-                  {audit.statusLabel}
-                </p>
-
-                {audit.alerts.length > 0 && (
-                  <div className="mt-3 space-y-2.5">
-                    {audit.alerts.map((al) => (
-                      <div
-                        key={al.id}
-                        className={`rounded-lg border p-3 ${
-                          al.severity === "critical"
-                            ? "border-danger/30 bg-danger-soft/60"
-                            : "border-amberwarn/30 bg-amberwarn-soft/70"
-                        }`}
-                      >
-                        <div className="text-[12.5px] font-bold text-signage">
-                          {al.title}
-                        </div>
-                        <p className="mt-0.5 text-[12px] text-signage-muted">
-                          {al.explanation}
-                        </p>
-                        {al.fixLabel && (
-                          <button
-                            type="button"
-                            onClick={() => applyAuditFix(al)}
-                            className="mt-2 inline-flex items-center gap-1 rounded-md bg-signage px-2.5 py-1.5 text-[11.5px] font-semibold text-leroy"
-                          >
-                            <PlusIcon size={12} />
-                            {al.fixLabel}
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {audit.passedChecks.length > 0 && (
-                  <details className="mt-3 border-t border-rule pt-2.5 text-[12px] text-signage-muted">
-                    <summary className="cursor-pointer font-medium text-signage-subtle hover:text-signage">
-                      Ver {audit.passedChecks.length} verificações aprovadas
-                    </summary>
-                    <ul className="mt-2 space-y-1.5">
-                      {audit.passedChecks.map((check) => (
-                        <li key={check} className="flex items-start gap-1.5">
-                          <CheckCircleIcon
-                            size={13}
-                            className="mt-0.5 flex-shrink-0 text-leroy-dark"
-                          />
-                          <span>{check}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
-              </div>
-            </div>
+            <AuditPanel audit={audit} onApplyFix={applyAuditFix} />
 
             {/* Leroy Merlin Instala (compacto) */}
             {installService && (
-              <div className="panel p-4">
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-signage">
-                    <WrenchIcon size={14} className="text-leroy-dark" />
-                    Leroy Merlin Instala
-                  </span>
-                  <span className="font-mono text-[15px] font-extrabold text-signage">
-                    {formatBRL(installService.price)}
-                  </span>
-                </div>
-                <p className="mt-1 text-[12px] text-signage-muted">
-                  {installService.title.replace("Leroy Merlin Instala · ", "")} com garantia de 12 meses.
-                </p>
-                <button
-                  type="button"
-                  onClick={toggleInstallService}
-                  className={`mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-[12.5px] font-semibold transition ${
-                    includeInstall
-                      ? "bg-leroy text-signage"
-                      : "border border-rule-strong bg-floor text-signage hover:border-signage hover:bg-white"
-                  }`}
-                >
-                  {includeInstall ? (
-                    <>
-                      <CheckIcon size={14} strokeWidth={2.5} />
-                      Instalação incluída
-                    </>
-                  ) : (
-                    <>
-                      <PlusIcon size={14} />
-                      Incluir instalação
-                    </>
-                  )}
-                </button>
-              </div>
+              <InstallServiceCard
+                service={installService}
+                included={includeInstall}
+                onToggle={toggleInstallService}
+              />
             )}
 
             {/* CTAs */}
