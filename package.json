@@ -11,7 +11,8 @@
     "test": "tsx --test \"lib/**/*.test.ts\"",
     "eval": "tsx scripts/eval.ts",
     "check:secrets": "node scripts/check-secrets.mjs",
-    "check": "npm run check:secrets && npm run typecheck && npm run lint && npm test"
+    "check": "npm run check:secrets && npm run typecheck && npm run lint && npm test",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "@google/genai": "^3.6.1",

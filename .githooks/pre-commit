@@ -1,0 +1,3 @@
+#!/bin/sh
+# Bloqueia commit com chave de API ou credencial. Ativado por "npm install" (script prepare).
+node scripts/check-secrets.mjs
