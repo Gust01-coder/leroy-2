@@ -1,0 +1,41 @@
+import type { Product } from "../../types";
+
+/** Limpeza e Proteção (corredor C21). */
+export const LIMPEZA_PROTECAO: Product[] = [
+  {
+    id: "lim-pano-multiuso",
+    sku: "89988402",
+    brand: "3M Scotch-Brite",
+    name: "Pano Multiuso Scotch Brite Azul C/5",
+    imageUrl: "https://cdn.leroymerlin.com.br/products/pano_multiuso_scotch_brite_azul_c_5_89988402_6aa7_600x600.jpg",
+    url: "https://www.leroymerlin.com.br/pano-multiuso-scotch-brite-azul-c-5_89988402",
+    category: "Limpeza",
+    price: 14.9,
+    unit: "pack 5",
+    aisle: "L2",
+    corridorCode: "C21",
+    shelfLocation: "Módulo 01 · Prateleira 3",
+    description: "Panos multiuso para limpar respingos e poeira de furação sem riscar metais.",
+    laymanTerms: ["pano limpar sujeira", "secar agua pia"],
+    tags: ["pano", "microfibra", "limpeza", "acabamento"],
+    stockByStore: { "es-vitoria": 64, "sp-tiete": 60, "rj-barra": 51 },
+  },
+  {
+    id: "lim-removedor-mofo",
+    sku: "90715114",
+    brand: "Attack",
+    name: "Limpador para Mofo e Bolor Attack CP3084 500ml",
+    imageUrl: "https://cdn.leroymerlin.com.br/products/limpador_para_mofo_e_bolor_attack_cp3084_500ml__90715114_2a20_600x600.jpeg",
+    url: "https://www.leroymerlin.com.br/limpador-para-mofo-e-bolor-attack-cp3084-500ml_90715114",
+    category: "Limpeza",
+    price: 24.9,
+    unit: "500ml",
+    aisle: "L2",
+    corridorCode: "C21",
+    shelfLocation: "Módulo 03 · Prateleira 2",
+    description: "Limpador de mofo e bolor para paredes e rejuntes de banheiro, antes de pintar ou aplicar massa.",
+    laymanTerms: ["limpar parede preta", "tirar bolor banheiro", "mancha de mofo"],
+    tags: ["mofo", "bolor", "limpeza", "banheiro", "parede", "umidade", "axton"],
+    stockByStore: { "es-vitoria": 48, "sp-tiete": 42, "rj-barra": 36 },
+  },
+];

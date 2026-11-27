@@ -43,7 +43,7 @@ Remove bordas brancas excessivas e enquadra as fotos automaticamente:
 python scripts/catalog_collector.py --mode normalize-images
 ```
 
-### 6. Exportar para TypeScript (pronto para `lib/catalog.ts`)
+### 6. Exportar para TypeScript (pronto para `lib/catalog/catalog.ts`)
 ```powershell
 python scripts/catalog_collector.py --mode export-ts
 ```

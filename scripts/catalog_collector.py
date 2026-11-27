@@ -22,7 +22,7 @@ Modos suportados (100% lícitos e sem dependências externas):
   4. normalize-images  : Remove bordas brancas excessivas e padroniza fotos de produtos
                          para proporção 4:3 (640x480) uniforme usando Windows System.Drawing.
   5. export-ts         : Converte scripts/collected_catalog.json em snippet TypeScript
-                         pronto para integrar em lib/catalog.ts.
+                         pronto para integrar em lib/catalog/catalog.ts.
 
 Exemplos de uso (PowerShell na pasta lm-copiloto):
   python scripts/catalog_collector.py --mode status
