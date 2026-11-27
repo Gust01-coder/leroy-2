@@ -21,8 +21,16 @@ export async function generateJson(params: {
   contents: ContentListUnion;
   schema: object;
   timeoutMs?: number;
+  thinkingLevel?: ThinkingLevel;
 }): Promise<unknown> {
+  if (typeof window !== "undefined") {
+    throw new Error("lib/llm.ts só pode ser executado no servidor.");
+  }
   client ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+  const thinkingLevel =
+    params.thinkingLevel ??
+    (params.model === VISION_MODEL ? ThinkingLevel.LOW : ThinkingLevel.MINIMAL);
 
   const response = await client.models.generateContent({
     model: params.model,
@@ -32,8 +40,8 @@ export async function generateJson(params: {
       responseMimeType: "application/json",
       responseJsonSchema: params.schema,
       temperature: 0.2,
-      maxOutputTokens: 1024,
-      thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
+      maxOutputTokens: thinkingLevel === ThinkingLevel.MINIMAL ? 1024 : 2048,
+      thinkingConfig: { thinkingLevel },
       abortSignal: AbortSignal.timeout(params.timeoutMs ?? DEFAULT_TIMEOUT_MS),
     },
   });

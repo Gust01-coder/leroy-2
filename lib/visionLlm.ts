@@ -5,7 +5,7 @@ import {
   PRODUCT_IDS,
   cleanText,
 } from "./copilotLlm";
-import { VISION_MODEL, generateJson } from "./llm";
+import { CHAT_MODEL, VISION_MODEL, generateJson } from "./llm";
 import { ALL_PRESET_IDS, getPresetProject } from "./projects";
 import type { DynamicProjectList, VisionAnalysisResult } from "./types";
 
@@ -62,21 +62,38 @@ export async function analyzeWithLlm(params: {
   const image = parseImageDataUrl(params.imageDataUrl);
   if (!image) throw new Error("Imagem em formato inesperado");
 
-  const raw = (await generateJson({
-    model: VISION_MODEL,
-    systemInstruction: SYSTEM_INSTRUCTION,
-    contents: [
-      {
-        role: "user",
-        parts: [
-          { inlineData: image },
-          { text: params.caption ? `Legenda do cliente: ${params.caption.slice(0, 200)}` : "Sem legenda." },
-        ],
-      },
-    ],
-    schema: VISION_SCHEMA,
-    timeoutMs: 12000,
-  })) as Record<string, unknown> | null;
+  const visionContents = [
+    {
+      role: "user",
+      parts: [
+        { inlineData: image },
+        { text: params.caption ? `Legenda do cliente: ${params.caption.slice(0, 200)}` : "Sem legenda." },
+      ],
+    },
+  ];
+
+  let raw: Record<string, unknown> | null;
+  try {
+    raw = (await generateJson({
+      model: VISION_MODEL,
+      systemInstruction: SYSTEM_INSTRUCTION,
+      contents: visionContents,
+      schema: VISION_SCHEMA,
+      timeoutMs: 7000,
+    })) as Record<string, unknown> | null;
+  } catch (primaryErr) {
+    console.warn(
+      `[vision] ${VISION_MODEL} falhou, tentando ${CHAT_MODEL}:`,
+      primaryErr instanceof Error ? primaryErr.message : primaryErr
+    );
+    raw = (await generateJson({
+      model: CHAT_MODEL,
+      systemInstruction: SYSTEM_INSTRUCTION,
+      contents: visionContents,
+      schema: VISION_SCHEMA,
+      timeoutMs: 8000,
+    })) as Record<string, unknown> | null;
+  }
   if (!raw || typeof raw !== "object") throw new Error("Saida do modelo fora do schema");
 
   const detectedItem = cleanText(raw.detectedItem, 80);

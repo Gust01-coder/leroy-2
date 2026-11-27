@@ -39,11 +39,15 @@ Acesse **http://localhost:3000** (100% funcional sem chaves de API externas).
 
 ---
 
-## Deploy na Vercel
+## Deploy na Vercel (com chave segura)
 
-1. Importe este repositório (`Gust01-coder/leroy-2`) em [vercel.com/new](https://vercel.com/new).
-2. A Vercel detecta **Next.js 14** automaticamente na raiz do projeto (nenhuma variável de ambiente obrigatória).
+1. Importe o repositório em [vercel.com/new](https://vercel.com/new) (a Vercel detecta **Next.js 14** automaticamente na raiz).
+2. Em **Settings → Environment Variables**, adicione:
+   - `GEMINI_API_KEY`: sua chave do Google AI Studio (opcional — sem ela o app usa o motor local automaticamente).
+   - `DATABASE_URL`: opcional — crie em **Storage → Neon** para persistir eventos e chamados no Postgres entre aparelhos.
 3. Clique em **Deploy**.
+
+> **Segurança:** `.env` e `.env.*` (exceto `.env.example`) são ignorados pelo `.gitignore`, e `npm run check` + o hook `pre-commit` rodam `scripts/check-secrets.mjs` para bloquear qualquer commit com chaves API ou credenciais.
 
 ---
 
