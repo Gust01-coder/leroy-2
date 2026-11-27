@@ -38,3 +38,24 @@ test("gas nunca vira lista, nem no meio de outro fluxo", () => {
     assert.match(r.response.text, /Gás não é serviço/, q);
   }
 });
+
+test("pedido por item especifico devolve a lista com o produto certo, sem pergunta de esclarecimento", () => {
+  const cases: Array<[string, string]> = [
+    ["preciso de rolo e bandeja pra pintar", "tin-rolo-bandeja"],
+    ["fita pra não sujar o rodapé na pintura", "tin-fita-crepe"],
+    ["plástico pra proteger o chão quando for pintar", "tin-lona"],
+    ["bucha e parafuso pra parede de tijolo", "fix-bucha-s8"],
+    ["suporte de mão francesa", "fix-mao-francesa"],
+    ["nível pra deixar o quadro reto", "fer-nivel-bolha"],
+  ];
+  for (const [message, productId] of cases) {
+    const r = processCopilotMessage(message, ctx);
+    const ids = r.response.actionProject?.items.map((i) => i.productId) ?? [];
+    assert.equal(ids[0], productId, message);
+  }
+});
+
+test("pedido generico continua perguntando antes de listar", () => {
+  const r = processCopilotMessage("Quero pintar um quarto", ctx);
+  assert.equal(r.response.actionProject, undefined);
+});

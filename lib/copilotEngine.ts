@@ -147,6 +147,69 @@ const QUICK_PRESETS: Array<[RegExp, string]> = [
   [/entup/, "desentupir-pia"],
 ];
 
+/**
+ * Pedido por um item especifico ("suporte de mao francesa", "fita pro rodape"): devolve a lista
+ * direto. Sem isso, as intencoes genericas (pintura, prateleira) respondem com uma pergunta de
+ * esclarecimento e o cliente que ja sabe o que quer perde um passo.
+ */
+type SpecificItem = {
+  pattern: RegExp;
+  topic: string;
+  items: Array<{ productId: string; reason: string }>;
+};
+
+const SPECIFIC_ITEMS: SpecificItem[] = [
+  {
+    pattern: /\brolo\b.*\bbandeja\b|\bbandeja\b.*\brolo\b|\brolinho\b/,
+    topic: "Rolo e bandeja de pintura",
+    items: [
+      { productId: "tin-rolo-bandeja", reason: "Kit com rolo e bandeja" },
+      { productId: "tin-trincha", reason: "Para os cantos e recortes" },
+    ],
+  },
+  {
+    pattern: /\bfita\b.*(rodape|crepe|sujar|proteger)|\bcrepe\b/,
+    topic: "Fita de proteção para pintura",
+    items: [
+      { productId: "tin-fita-crepe", reason: "Protege rodapé e batentes" },
+      { productId: "tin-lona", reason: "Protege o piso" },
+    ],
+  },
+  {
+    pattern: /(plastico|lona).*(chao|piso|cobrir|proteger)|(chao|piso).*(plastico|lona)/,
+    topic: "Proteção de piso para pintura",
+    items: [
+      { productId: "tin-lona", reason: "Cobre o piso e os móveis" },
+      { productId: "tin-fita-crepe", reason: "Prende a lona na parede" },
+    ],
+  },
+  {
+    pattern: /\b(bucha|parafuso)s?\b.*(tijolo|alvenaria)|(tijolo|alvenaria).*\b(bucha|parafuso)s?\b/,
+    topic: "Bucha para parede de tijolo",
+    items: [
+      { productId: "fix-bucha-s8", reason: "Bucha 8 mm para alvenaria" },
+      { productId: "fer-kit-brocas", reason: "Broca na bitola certa" },
+    ],
+  },
+  {
+    pattern: /mao francesa/,
+    topic: "Mão francesa",
+    items: [
+      { productId: "fix-mao-francesa", reason: "Suporte reforçado para prateleira" },
+      { productId: "fix-bucha-s8", reason: "Fixação na parede" },
+      { productId: "fer-nivel-bolha", reason: "Garante a prateleira reta" },
+    ],
+  },
+  {
+    pattern: /\bnivel\b/,
+    topic: "Nível",
+    items: [
+      { productId: "fer-nivel-bolha", reason: "Deixa o quadro ou a prateleira reta" },
+      { productId: "fix-bucha-s8", reason: "Para fixar depois de alinhar" },
+    ],
+  },
+];
+
 export const RISKS = ["nenhum", "eletrica", "gas", "estrutura", "altura"] as const;
 export type Risk = (typeof RISKS)[number];
 
@@ -550,6 +613,20 @@ export function processCopilotMessage(
       response: {
         text: `Montei o projeto **${project.title}** (**${formatTotal(project)}**) com os itens certos e o passo a passo.`,
         actionProject: project,
+      },
+      newContext: newCtx,
+    };
+  }
+
+  const specific = SPECIFIC_ITEMS.find(({ pattern }) => pattern.test(n));
+  if (specific) {
+    const project = buildProductListProject(storeId, input, specific.items, "busca-semantica");
+    return {
+      painTopic: specific.topic,
+      response: {
+        text: `Separei **${specific.topic.toLowerCase()}** com o corredor e o estoque da sua loja (**${formatTotal(project)}**).`,
+        actionProject: project,
+        suggestions: ["Chamar vendedor especialista", "Resolver outro projeto"],
       },
       newContext: newCtx,
     };
