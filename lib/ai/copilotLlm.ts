@@ -11,7 +11,6 @@ import {
 } from "./copilotEngine";
 import { CHAT_MODEL, generateJson } from "./llm";
 import { ALL_PRESET_IDS, buildPaintingProject, getPresetProject } from "../catalog/projects";
-import { normalizeText } from "./semanticSearch";
 import { DEFAULT_STORE_ID } from "../store/stores";
 import type { ChatContext, Department } from "../types";
 import { corridorOf } from "../store/storeMap";

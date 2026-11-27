@@ -3,7 +3,6 @@ import {
   CompatibilityAlert,
   CompatibilityAudit,
   DynamicProjectList,
-  ProjectItem,
 } from "../types";
 
 /**

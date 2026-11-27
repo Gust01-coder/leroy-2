@@ -4,19 +4,12 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { StoreBar } from "@/components/StoreBar";
-import { Logo } from "@/components/Logo";
 import { ProductThumb } from "@/components/ProductThumb";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  BookOpenIcon,
-  CheckCircleIcon,
-  CheckIcon,
-  MapIcon,
   PlusIcon,
-  QrCodeIcon,
   ShieldCheckIcon,
-  SparkleIcon,
   StoreIcon,
   WrenchIcon,
 } from "@/components/Icons";
@@ -43,6 +36,10 @@ import {
 } from "@/lib/telemetry";
 import { getInstallServiceForIntent } from "@/lib/catalog/tiersAndServices";
 import { CompatibilityAlert, DynamicProjectList } from "@/lib/types";
+import { FulfillmentOption } from "@/components/checkout/FulfillmentOption";
+import { OrderConfirmation } from "@/components/checkout/OrderConfirmation";
+import { PaymentTile } from "@/components/checkout/PaymentTile";
+import { fulfillmentLabel, paymentLabel } from "@/lib/checkout/labels";
 
 const INSTALL_SLOTS = [
   "Amanhã · Manhã (08h–12h)",
@@ -258,169 +255,7 @@ function CheckoutInner() {
 
   // ================= TELA DE CONFIRMAÇÃO: PASSE DIGITAL DE SAÍDA =================
   if (completedOrder) {
-    return (
-      <div className="flex min-h-screen flex-col bg-floor">
-        <StoreBar />
-
-        <main className="container-wide flex-1 py-8">
-          <div className="mx-auto max-w-[680px] space-y-5">
-            {/* Cartão Passe Digital de Saída (estética Apple Store + Leroy Merlin) */}
-            <section className="overflow-hidden rounded-3xl border border-rule bg-white shadow-floating">
-              <div className="bg-signage px-6 py-5 text-white">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <Logo variant="dark" showSubtitle={false} className="origin-left scale-95" />
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-leroy/20 px-3 py-1 text-[12px] font-bold text-leroy">
-                    <CheckCircleIcon size={14} />
-                    Pedido confirmado
-                  </span>
-                </div>
-
-                <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
-                  <div>
-                    <div className="text-[12px] text-white/60">
-                      {completedOrder.fulfillment === "scan_and_go"
-                        ? "Passe Digital de Saída Sem Fila"
-                        : completedOrder.fulfillment === "clique_retire"
-                        ? "Código de Retirada Expressa"
-                        : "Comprovante de Entrega Expressa"}
-                    </div>
-                    <h1 className="mt-0.5 font-display text-[26px] font-extrabold tracking-tight text-white">
-                      {completedOrder.code}
-                    </h1>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[11px] uppercase tracking-wider text-white/55">
-                      Total pago
-                    </div>
-                    <div className="font-mono text-[24px] font-extrabold leading-none text-leroy">
-                      {formatBRL(completedOrder.grandTotal)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <div className="flex flex-col items-center gap-5 rounded-2xl border border-rule bg-floor/70 p-5 sm:flex-row">
-                  <div className="flex-shrink-0 rounded-2xl border border-rule bg-white p-3 shadow-card">
-                    <OrderPassQr code={completedOrder.code} />
-                  </div>
-
-                  <div className="min-w-0 flex-1 text-center sm:text-left">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-leroy-soft px-2.5 py-0.5 font-mono text-[11px] font-bold text-leroy-deep">
-                      PIN DE LIBERAÇÃO · {completedOrder.exitPin}
-                    </span>
-
-                    <h2 className="mt-2 font-display text-[18px] font-extrabold text-signage">
-                      {completedOrder.fulfillment === "scan_and_go"
-                        ? "Passe direto na Saída Expressa"
-                        : completedOrder.fulfillment === "clique_retire"
-                        ? "Pronto em até 30 min na unidade"
-                        : "Separação iniciada para entrega"}
-                    </h2>
-
-                    <p className="mt-1 text-[13px] leading-relaxed text-signage-muted">
-                      {completedOrder.fulfillment === "scan_and_go"
-                        ? `Mostre este QR Code ao colaborador na saída da ${completedOrder.storeName}. Sem passar pelo caixa.`
-                        : completedOrder.fulfillment === "clique_retire"
-                        ? `Apresente o código ${completedOrder.exitPin} no Balcão Clique & Retire ou Drive-Thru da ${completedOrder.storeName}.`
-                        : `Entrega prevista para ${completedOrder.deliveryAddress}.`}
-                    </p>
-
-                    {completedOrder.clubMember && completedOrder.clubPoints > 0 && (
-                      <div className="mt-2.5 inline-flex items-center gap-1.5 text-[12px] font-semibold text-leroy-deep">
-                        <SparkleIcon size={13} />
-                        +{completedOrder.clubPoints} pontos no Clube Leroy Merlin Com Você
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Código Pix Copia e Cola quando pago via Pix */}
-                {completedOrder.paymentMethod === "pix" && (
-                  <div className="mt-4 rounded-xl border border-rule bg-floor/50 p-3.5">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-[12px] font-semibold text-signage">
-                        Pix Instantâneo (5% OFF · economia de {formatBRL(completedOrder.pixDiscount)})
-                      </span>
-                      <button
-                        type="button"
-                        onClick={handleCopyPix}
-                        className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg bg-signage px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-signage-soft"
-                      >
-                        {pixCopied ? (
-                          <>
-                            <CheckIcon size={13} className="text-leroy" />
-                            Código copiado!
-                          </>
-                        ) : (
-                          <>
-                            <QrCodeIcon size={13} className="text-leroy" />
-                            Copiar Pix Copia e Cola
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <div className="mt-2 truncate rounded-lg border border-rule bg-white px-3 py-2 font-mono text-[11px] text-signage-subtle">
-                      {completedOrder.pixPayload}
-                    </div>
-                  </div>
-                )}
-
-                {/* Detalhes resumidos */}
-                <div className="mt-5 grid gap-3 border-t border-rule pt-4 text-[13px] sm:grid-cols-2">
-                  <div>
-                    <div className="text-[11.5px] font-medium text-signage-subtle">Projeto</div>
-                    <div className="font-semibold text-signage">
-                      {completedOrder.projectTitle} ({completedOrder.itemsCount} itens)
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-[11.5px] font-medium text-signage-subtle">Pagamento</div>
-                    <div className="font-semibold text-signage">
-                      {paymentLabel(completedOrder.paymentMethod)}
-                      {completedOrder.paymentMethod === "cartao" &&
-                      completedOrder.installmentCount > 1
-                        ? ` (${completedOrder.installmentCount}× sem juros)`
-                        : ""}
-                    </div>
-                  </div>
-                  {completedOrder.includeInstall && completedOrder.installSlot && (
-                    <div className="sm:col-span-2 rounded-xl bg-leroy-soft/60 px-3.5 py-2.5 text-[12.5px] text-leroy-deep">
-                      <strong>Leroy Merlin Instala agendado:</strong> {completedOrder.installSlot} (garantia de 12 meses).
-                    </div>
-                  )}
-                </div>
-
-                {/* Ações pós-compra: fecha o ciclo DIY */}
-                <div className="mt-6 grid gap-2.5 sm:grid-cols-2">
-                  <Link
-                    href={`/lista?id=${encodeURIComponent(completedOrder.projectId)}&tab=tutorial`}
-                    className="btn-accent w-full"
-                  >
-                    <BookOpenIcon size={15} />
-                    Abrir passo a passo de instalação
-                  </Link>
-                  <Link
-                    href={`/mapa?id=${encodeURIComponent(completedOrder.projectId)}`}
-                    className="btn-secondary w-full"
-                  >
-                    <MapIcon size={15} />
-                    Ver mapa dos corredores
-                  </Link>
-                </div>
-
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-rule pt-3 text-[12px] text-signage-subtle">
-                  <span>Ambiente demonstrativo · nenhuma cobrança real foi efetuada.</span>
-                  <Link href="/painel" className="font-semibold text-leroy-deep hover:underline">
-                    Ver pedido registrado no Painel →
-                  </Link>
-                </div>
-              </div>
-            </section>
-          </div>
-        </main>
-      </div>
-    );
+    return <OrderConfirmation completedOrder={completedOrder} pixCopied={pixCopied} onCopyPix={handleCopyPix} />;
   }
 
   // ================= FLUXO DE CHECKOUT EXPRESSO =================
@@ -897,151 +732,5 @@ function CheckoutInner() {
         </div>
       </main>
     </div>
-  );
-}
-
-function fulfillmentLabel(mode: FulfillmentMode): string {
-  if (mode === "scan_and_go") return "Sair sem fila";
-  if (mode === "clique_retire") return "Clique & Retire";
-  return "Entrega expressa";
-}
-
-function paymentLabel(method: PaymentMethod): string {
-  if (method === "pix") return "Pix Instantâneo";
-  if (method === "cartao") return "Cartão de Crédito";
-  return "Totem / Celebre";
-}
-
-function FulfillmentOption({
-  selected,
-  onSelect,
-  badge,
-  title,
-  subtitle,
-  priceLabel,
-}: {
-  selected: boolean;
-  onSelect: () => void;
-  badge: string;
-  title: string;
-  subtitle: string;
-  priceLabel: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`flex w-full items-start justify-between gap-3 rounded-xl border-2 p-3.5 text-left transition ${
-        selected
-          ? "border-leroy-cta bg-leroy-soft/35"
-          : "border-rule bg-white hover:border-rule-strong"
-      }`}
-    >
-      <div className="flex min-w-0 flex-1 items-start gap-3">
-        <span
-          className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
-            selected ? "border-leroy-cta bg-leroy-cta text-white" : "border-rule-strong"
-          }`}
-        >
-          {selected && <CheckIcon size={11} strokeWidth={3} />}
-        </span>
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[14px] font-bold text-signage">{title}</span>
-            <span className="rounded-full bg-leroy-soft px-2 py-0.5 text-[10.5px] font-bold text-leroy-deep">
-              {badge}
-            </span>
-          </div>
-          <p className="mt-0.5 text-[12px] text-signage-muted">{subtitle}</p>
-        </div>
-      </div>
-
-      <span
-        className={`flex-shrink-0 font-mono text-[13px] font-extrabold ${
-          priceLabel === "Grátis" ? "text-leroy-deep" : "text-signage"
-        }`}
-      >
-        {priceLabel}
-      </span>
-    </button>
-  );
-}
-
-function PaymentTile({
-  selected,
-  onSelect,
-  title,
-  highlight,
-  detail,
-}: {
-  selected: boolean;
-  onSelect: () => void;
-  title: string;
-  highlight: string;
-  detail: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`flex min-h-[86px] flex-col justify-between rounded-xl border-2 p-3.5 text-left transition ${
-        selected
-          ? "border-leroy-cta bg-leroy-soft/40"
-          : "border-rule bg-white hover:border-rule-strong"
-      }`}
-    >
-      <div className="flex items-center justify-between gap-1">
-        <span className="text-[13.5px] font-bold text-signage">{title}</span>
-        {selected && <CheckCircleIcon size={15} className="flex-shrink-0 text-leroy-cta" />}
-      </div>
-      <div className="mt-2">
-        <div className="text-[11.5px] font-bold text-leroy-deep">{highlight}</div>
-        <div className="text-[11px] text-signage-subtle">{detail}</div>
-      </div>
-    </button>
-  );
-}
-
-function OrderPassQr({ code }: { code: string }) {
-  // Padrão determinístico baseado no código do pedido
-  const seed = code.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  const size = 17;
-  const cells: boolean[][] = [];
-  for (let y = 0; y < size; y++) {
-    const row: boolean[] = [];
-    for (let x = 0; x < size; x++) {
-      const inFinder =
-        (x < 5 && y < 5) || (x >= size - 5 && y < 5) || (x < 5 && y >= size - 5);
-      if (inFinder) {
-        const lx = x < 5 ? x : x - (size - 5);
-        const ly = y < 5 ? y : y - (size - 5);
-        row.push(lx === 0 || lx === 4 || ly === 0 || ly === 4 || (lx === 2 && ly === 2));
-      } else {
-        row.push(((x * 13 + y * 29 + seed) % 7) < 4);
-      }
-    }
-    cells.push(row);
-  }
-
-  return (
-    <svg viewBox="0 0 180 180" className="h-32 w-32" aria-label={`QR Code do pedido ${code}`}>
-      <rect width="180" height="180" fill="#FFFFFF" />
-      {cells.map((row, y) =>
-        row.map((on, x) =>
-          on ? (
-            <rect
-              key={`${x}-${y}`}
-              x={10 + x * 9.4}
-              y={10 + y * 9.4}
-              width="8.2"
-              height="8.2"
-              rx="1.2"
-              fill="#14171A"
-            />
-          ) : null
-        )
-      )}
-      <polygon points="90,68 114,108 66,108" fill="#78BE20" stroke="#FFFFFF" strokeWidth="4" />
-    </svg>
   );
 }
