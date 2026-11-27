@@ -8,29 +8,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Superfícies industriais de loja física (concreto claro + branco técnico)
+        // Superfície luminosa de varejo moderno (faz cards brancos flutuarem sem peso visual)
         floor: {
-          DEFAULT: "#F3F4F6",
-          deep: "#E8EAEE",
+          DEFAULT: "#F4F6F9",
+          deep: "#E8ECF2",
         },
-        // Placas aéreas de sinalização Leroy Merlin
+        // Tipografia e superfícies escuras editoriais
         signage: {
-          DEFAULT: "#111315",
-          soft: "#1E2226",
-          muted: "#4B525B",
-          subtle: "#707882",
+          DEFAULT: "#14171A",
+          soft: "#1F242A",
+          muted: "#4E5763",
+          subtle: "#747F8D",
         },
-        // Divisórias técnicas 1px
+        // Divisórias suaves
         rule: {
-          DEFAULT: "#D8DCE2",
-          strong: "#B8BFC9",
+          DEFAULT: "#E4E8EF",
+          strong: "#CBD2DD",
         },
         // Verde oficial Leroy Merlin
         leroy: {
           DEFAULT: "#78BE20",
-          dark: "#5A9613",
+          cta: "#65AA16",
+          dark: "#528E11",
           deep: "#3B6609",
-          soft: "#ECF7DF",
+          soft: "#EEF8E2",
           glow: "#92DE34",
         },
         // Etiqueta eletrônica E-Ink (ESL)
@@ -55,6 +56,11 @@ const config: Config = {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
+      boxShadow: {
+        card: "0 2px 12px rgba(15, 23, 42, 0.04)",
+        "card-hover": "0 10px 28px rgba(15, 23, 42, 0.08)",
+        floating: "0 14px 36px rgba(15, 23, 42, 0.12)",
+      },
       animation: {
         "fade-in": "fadeIn 0.25s ease-out",
         "slide-up": "slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
@@ -78,11 +84,13 @@ const config: Config = {
         eslBlink: {
           "0%, 100%": {
             opacity: "1",
-            boxShadow: "0 0 0 0 rgba(120, 190, 32, 0.85), 0 0 14px 3px rgba(120, 190, 32, 0.75)",
+            boxShadow:
+              "0 0 0 0 rgba(120, 190, 32, 0.85), 0 0 14px 3px rgba(120, 190, 32, 0.75)",
           },
           "50%": {
             opacity: "0.28",
-            boxShadow: "0 0 0 6px rgba(120, 190, 32, 0), 0 0 2px 0 rgba(120, 190, 32, 0.2)",
+            boxShadow:
+              "0 0 0 6px rgba(120, 190, 32, 0), 0 0 2px 0 rgba(120, 190, 32, 0.2)",
           },
         },
         waveBar: {

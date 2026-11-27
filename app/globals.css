@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --bg-floor: #F3F4F6;
-  --fg-signage: #111315;
+  --bg-floor: #F4F6F9;
+  --fg-signage: #14171A;
 }
 
 @layer base {
@@ -23,76 +23,75 @@
   }
 
   ::selection {
-    background: rgba(120, 190, 32, 0.25);
-    color: #111315;
+    background: rgba(120, 190, 32, 0.22);
+    color: #14171A;
   }
 }
 
 @layer components {
   .container-wide {
-    @apply mx-auto w-full max-w-[1140px] px-4 sm:px-6;
+    @apply mx-auto w-full max-w-[1160px] px-4 sm:px-6;
   }
 
-  /* Botão primário industrial: retangular nítido, alto contraste */
+  /* Botão primário escuro elegante */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-signage px-5 py-3
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-signage px-5 py-2.5
            text-[13.5px] font-semibold tracking-tight text-white transition
            hover:bg-signage-soft active:translate-y-[0.5px] disabled:pointer-events-none disabled:opacity-40;
   }
 
-  /* Botão secundário técnico */
+  /* Botão secundário limpo */
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-rule-strong
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-rule-strong
            bg-white px-4 py-2.5 text-[13.5px] font-semibold tracking-tight text-signage
-           transition hover:border-signage hover:bg-floor active:translate-y-[0.5px] disabled:opacity-40;
+           transition hover:border-signage/50 hover:bg-floor active:translate-y-[0.5px] disabled:opacity-40;
   }
 
-  /* Botão ação Leroy Merlin (verde oficial) */
+  /* Botão CTA verde oficial Leroy Merlin (alto contraste branco sobre verde) */
   .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-leroy px-5 py-3
-           text-[13.5px] font-bold tracking-tight text-signage transition
-           hover:bg-leroy-dark hover:text-white active:translate-y-[0.5px] disabled:pointer-events-none disabled:opacity-40;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-leroy-cta px-5 py-2.5
+           text-[13.5px] font-semibold tracking-tight text-white shadow-sm transition
+           hover:bg-leroy-dark active:translate-y-[0.5px] disabled:pointer-events-none disabled:opacity-40;
   }
 
-  /* Placa de corredor estilo sinalização aérea Leroy Merlin */
+  /* Placa de corredor discreta e legível */
   .aisle-plate {
-    @apply inline-flex items-center gap-1 rounded bg-signage px-2 py-0.5 font-mono text-[11px] font-bold tracking-wider text-leroy;
+    @apply inline-flex items-center gap-1 rounded-md bg-signage/90 px-2 py-0.5 font-mono text-[11px] font-bold tracking-wider text-leroy backdrop-blur-sm;
   }
 
-  /* Chip tátil técnico */
+  /* Chip tátil acessível (44px mínimo) */
   .chip {
-    @apply inline-flex min-h-[44px] items-center gap-1.5 rounded-md border border-rule bg-white
-           px-3.5 py-2 text-left text-[13px] font-medium text-signage-muted transition
-           hover:border-signage hover:text-signage hover:bg-floor disabled:opacity-40;
+    @apply inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-rule bg-white
+           px-3.5 py-2 text-left text-[13px] font-medium text-signage-muted shadow-card transition
+           hover:border-leroy/70 hover:text-signage disabled:opacity-40;
   }
 
-  /* Rótulo técnico superior */
+  /* Rótulo superior enxuto */
   .kicker {
-    @apply font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-signage-muted;
+    @apply font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-leroy-deep;
   }
 
-  /* Painel branco técnico com hairline 1px */
+  /* Painel branco elevado (estética limpa da referência) */
   .panel {
-    @apply rounded-xl border border-rule bg-white;
+    @apply rounded-2xl border border-rule/80 bg-white shadow-card;
   }
 
   .badge-stock-ok {
-    @apply inline-flex items-center gap-1 rounded bg-leroy-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-leroy-deep;
+    @apply inline-flex items-center gap-1 rounded-full bg-leroy-soft px-2.5 py-0.5 font-mono text-[11px] font-semibold text-leroy-deep;
   }
 
   .badge-stock-low {
-    @apply inline-flex items-center gap-1 rounded bg-amberwarn-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-amberwarn;
+    @apply inline-flex items-center gap-1 rounded-full bg-amberwarn-soft px-2.5 py-0.5 font-mono text-[11px] font-semibold text-amberwarn;
   }
 
   .badge-stock-out {
-    @apply inline-flex items-center gap-1 rounded bg-danger-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-danger;
+    @apply inline-flex items-center gap-1 rounded-full bg-danger-soft px-2.5 py-0.5 font-mono text-[11px] font-semibold text-danger;
   }
 
-  /* Grid arquitetônico sutil para cabeçalhos de planta/sinalização */
+  /* Textura sutil opcional para cabeçalhos escuros */
   .blueprint-grid {
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
 

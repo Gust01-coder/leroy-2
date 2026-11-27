@@ -27,7 +27,7 @@ export function StoreBar() {
   const [storeMenuOpen, setStoreMenuOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const qrDialogRef = useDialog<HTMLDivElement>(qrOpen, () => setQrOpen(false));
-  const [currentOrigin, setCurrentOrigin] = useState("https://lm-copiloto.vercel.app");
+  const [currentOrigin, setCurrentOrigin] = useState("https://leroy-2.vercel.app");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,24 +65,27 @@ export function StoreBar() {
   }
 
   const navItems = [
-    { href: "/", label: "Modo Loja", Icon: CompassIcon, exact: true },
-    { href: "/chat", label: "Copiloto", Icon: MessageIcon },
+    { href: "/", label: "Início", Icon: CompassIcon, exact: true },
+    { href: "/chat", label: "Copiloto IA", Icon: MessageIcon },
     { href: "/catalogo", label: "Catálogo", Icon: SearchIcon },
-    { href: "/painel", label: "Vendedor & Dados", Icon: ChartIcon },
+    { href: "/painel", label: "Vendedor", Icon: ChartIcon },
   ];
 
   const activeStore = getStoreById(storeId);
 
   return (
     <>
-      {/* Barra superior estilo placa aérea de megastore Leroy Merlin */}
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-signage text-white">
-        <div className="container-wide flex h-14 items-center justify-between gap-3">
-          <Link href="/" className="flex-shrink-0">
-            <Logo variant="dark" />
+      {/* Header branco limpo com logo oficial Leroy Merlin */}
+      <header className="sticky top-0 z-30 border-b border-rule/80 bg-white/95 text-signage backdrop-blur-md">
+        <div className="container-wide flex h-16 items-center justify-between gap-3">
+          <Link href="/" className="flex-shrink-0 focus:outline-none">
+            <Logo variant="light" />
           </Link>
 
-          <nav className="hidden h-full items-center gap-1 md:flex" aria-label="Navegação principal">
+          <nav
+            className="hidden h-full items-center gap-1 md:flex"
+            aria-label="Navegação principal"
+          >
             {navItems.map(({ href, label, Icon, exact }) => {
               const active = exact
                 ? pathname === href
@@ -91,22 +94,21 @@ export function StoreBar() {
                 <Link
                   key={href}
                   href={href}
-                  className={`relative inline-flex h-full items-center gap-1.5 px-3.5 text-[12.5px] font-semibold transition ${
-                    active ? "text-white" : "text-white/60 hover:text-white"
+                  className={`relative inline-flex h-10 items-center gap-1.5 rounded-xl px-3.5 text-[13.5px] font-semibold transition ${
+                    active
+                      ? "bg-leroy-soft text-leroy-deep"
+                      : "text-signage-muted hover:bg-floor hover:text-signage"
                   }`}
                 >
-                  <Icon size={14} className={active ? "text-leroy" : ""} />
+                  <Icon size={15} className={active ? "text-leroy-cta" : ""} />
                   {label}
-                  {active && (
-                    <span className="absolute bottom-0 left-2 right-2 h-[3px] bg-leroy" />
-                  )}
                 </Link>
               );
             })}
           </nav>
 
           <div className="flex min-w-0 items-center gap-2">
-            {/* Seletor customizado de unidade (zero seta dupla de navegador!) */}
+            {/* Seletor de unidade */}
             <div ref={menuRef} className="relative min-w-0">
               <button
                 type="button"
@@ -114,28 +116,30 @@ export function StoreBar() {
                 aria-haspopup="listbox"
                 aria-expanded={storeMenuOpen}
                 aria-label={`Loja: ${activeStore.shortName}. Trocar de loja`}
-                className="inline-flex h-10 max-w-full items-center gap-2 rounded-md border border-white/15 bg-signage-soft px-2.5 text-[12px] font-medium text-white transition hover:border-leroy/70"
+                className="inline-flex h-10 max-w-full items-center gap-2 rounded-xl border border-rule bg-floor px-3 text-[12.5px] font-semibold text-signage transition hover:border-leroy/70 hover:bg-white"
               >
-                <StoreIcon size={13} className="text-leroy" />
-                <span className="min-w-0 max-w-[125px] truncate sm:max-w-[165px]">
+                <StoreIcon size={14} className="flex-shrink-0 text-leroy-cta" />
+                <span className="min-w-0 max-w-[125px] truncate sm:max-w-[170px]">
                   {activeStore.shortName}
                 </span>
                 <svg
-                  width="11"
-                  height="11"
+                  width="12"
+                  height="12"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2.2"
-                  className={`text-white/50 transition ${storeMenuOpen ? "rotate-180" : ""}`}
+                  className={`flex-shrink-0 text-signage-subtle transition ${
+                    storeMenuOpen ? "rotate-180" : ""
+                  }`}
                 >
                   <path d="M6 9l6 6 6-6" />
                 </svg>
               </button>
 
               {storeMenuOpen && (
-                <div className="absolute right-0 mt-1.5 w-72 animate-fade-in overflow-hidden rounded-lg border border-rule-strong bg-white text-signage shadow-xl">
-                  <div className="border-b border-rule bg-floor px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-signage-subtle">
+                <div className="absolute right-0 mt-2 w-72 animate-fade-in overflow-hidden rounded-2xl border border-rule bg-white text-signage shadow-floating">
+                  <div className="border-b border-rule bg-floor px-3.5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-signage-subtle">
                     Selecionar Unidade Física
                   </div>
                   {STORES.map((s) => {
@@ -145,21 +149,21 @@ export function StoreBar() {
                         key={s.id}
                         type="button"
                         onClick={() => handleStoreChange(s.id)}
-                        className={`flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left text-[12.5px] transition hover:bg-floor ${
-                          selected ? "bg-leroy-soft/60 font-semibold text-signage" : ""
+                        className={`flex w-full items-center justify-between gap-2 px-3.5 py-3 text-left text-[13px] transition hover:bg-floor ${
+                          selected ? "bg-leroy-soft/70 font-semibold text-signage" : ""
                         }`}
                       >
                         <div className="min-w-0">
                           <div className="truncate font-bold">{s.name}</div>
-                          <div className="truncate text-[11px] font-normal text-signage-muted">
+                          <div className="truncate text-[11.5px] font-normal text-signage-muted">
                             {s.address}
                           </div>
-                          <div className="mt-0.5 font-mono text-[10px] text-leroy-deep">
+                          <div className="mt-0.5 font-mono text-[10.5px] text-leroy-deep">
                             {s.areaM2.toLocaleString("pt-BR")}m² · {s.parkingSpots} vagas
                           </div>
                         </div>
                         {selected && (
-                          <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-leroy" />
+                          <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-leroy-cta" />
                         )}
                       </button>
                     );
@@ -173,16 +177,16 @@ export function StoreBar() {
               onClick={() => setQrOpen(true)}
               aria-label="Abrir etiqueta QR do carrinho"
               title="Etiqueta QR Code do Carrinho"
-              className="inline-flex h-10 min-w-[40px] items-center justify-center gap-1.5 rounded-md border border-white/15 bg-signage-soft px-2.5 text-[12px] font-semibold text-white/90 transition hover:border-leroy hover:text-leroy"
+              className="inline-flex h-10 min-w-[40px] items-center justify-center gap-1.5 rounded-xl border border-rule bg-white px-3 text-[12.5px] font-semibold text-signage transition hover:border-leroy hover:text-leroy-deep"
             >
-              <QrCodeIcon size={14} />
+              <QrCodeIcon size={15} />
               <span className="hidden sm:inline">QR</span>
             </button>
           </div>
         </div>
 
         {/* Navegação mobile compacta */}
-        <div className="grid grid-cols-4 border-t border-white/10 bg-signage-soft md:hidden">
+        <div className="grid grid-cols-4 border-t border-rule bg-white md:hidden">
           {navItems.map(({ href, label, Icon, exact }) => {
             const active = exact
               ? pathname === href
@@ -191,13 +195,13 @@ export function StoreBar() {
               <Link
                 key={href}
                 href={href}
-                className={`flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-semibold ${
+                className={`flex min-h-[44px] flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-semibold transition ${
                   active
-                    ? "border-b-2 border-leroy text-leroy"
-                    : "text-white/60"
+                    ? "border-b-2 border-leroy-cta text-leroy-deep"
+                    : "text-signage-muted"
                 }`}
               >
-                <Icon size={14} />
+                <Icon size={15} />
                 <span className="truncate">{label.split(" ")[0]}</span>
               </Link>
             );
@@ -213,67 +217,63 @@ export function StoreBar() {
         >
           <div
             ref={qrDialogRef}
-            role="dialog" aria-modal="true" tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
             aria-label="Etiqueta QR do carrinho"
-            className="w-full max-w-[400px] focus:outline-none animate-slide-up overflow-hidden rounded-xl border border-rule-strong bg-white shadow-2xl"
+            className="w-full max-w-[400px] animate-slide-up overflow-hidden rounded-2xl border border-rule bg-white shadow-2xl focus:outline-none"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Topo estilo placa de carrinho */}
             <div className="flex items-center justify-between bg-signage px-5 py-3.5 text-white">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 bg-leroy" />
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.15em]">
-                  Etiqueta do carrinho
-                </span>
-              </div>
+              <Logo variant="dark" showSubtitle={false} className="scale-90 origin-left" />
               <button
                 type="button"
                 onClick={() => setQrOpen(false)}
                 aria-label="Fechar"
-                className="text-white/60 hover:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition hover:bg-white/10 hover:text-white"
               >
                 <CloseIcon size={16} />
               </button>
             </div>
 
             <div className="p-5">
-              <div className="rounded-lg border-2 border-signage bg-floor p-4 text-center">
-                <div className="font-display text-[17px] font-extrabold uppercase tracking-tight text-signage">
+              <div className="rounded-xl border border-rule bg-floor p-4 text-center">
+                <div className="font-display text-[17px] font-extrabold text-signage">
                   Precisa achar uma peça?
                 </div>
-                <p className="mt-0.5 text-[12px] text-signage-muted">
+                <p className="mt-0.5 text-[12.5px] text-signage-muted">
                   Aponte a câmera · Sem app · Sem cadastro
                 </p>
 
-                <div className="mx-auto mt-3.5 inline-flex rounded-lg border border-rule-strong bg-white p-3">
+                <div className="mx-auto mt-3.5 inline-flex rounded-xl border border-rule bg-white p-3 shadow-card">
                   <StylizedQrSvg />
                 </div>
 
-                <div className="mt-3 font-mono text-[10.5px] font-semibold text-signage-muted">
+                <div className="mt-3 break-all font-mono text-[10.5px] font-medium text-signage-muted">
                   {currentOrigin}/chat?store={activeStore.id}
                 </div>
 
-                <div className="mt-2.5 flex items-center justify-center gap-2 border-t border-rule pt-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-leroy-deep">
+                <div className="mt-2.5 flex items-center justify-center gap-2 border-t border-rule pt-2.5 text-[11px] font-semibold text-leroy-deep">
                   <span>{activeStore.shortName}</span>
                   <span>·</span>
                   <span>{activeStore.areaM2.toLocaleString("pt-BR")}m²</span>
                 </div>
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-2">
+              <div className="mt-4 grid grid-cols-2 gap-2.5">
                 <Link
                   href="/chat"
                   onClick={() => setQrOpen(false)}
-                  className="btn-accent !py-2.5 !text-[12.5px]"
+                  className="btn-accent !text-[13px]"
                 >
                   Entrar pelo QR
                 </Link>
                 <Link
                   href="/painel"
                   onClick={() => setQrOpen(false)}
-                  className="btn-secondary !py-2.5 !text-[12.5px]"
+                  className="btn-secondary !text-[13px]"
                 >
-                  Console Vendedor
+                  Painel Vendedor
                 </Link>
               </div>
             </div>
@@ -320,7 +320,7 @@ function StylizedQrSvg() {
               y={10 + y * 9}
               width="7.8"
               height="7.8"
-              fill="#111315"
+              fill="#14171A"
             />
           ) : null
         )
@@ -330,7 +330,7 @@ function StylizedQrSvg() {
         x="100"
         y="111"
         textAnchor="middle"
-        fill="#111315"
+        fill="#FFFFFF"
         fontSize="12"
         fontWeight="800"
         fontFamily="var(--font-display), sans-serif"

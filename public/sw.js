@@ -1,4 +1,4 @@
-const CACHE_NAME = "lm-copiloto-v5";
+const CACHE_NAME = "lm-copiloto-v6";
 const PRECACHE_URLS = ["/", "/chat", "/catalogo", "/lista", "/mapa", "/painel", "/manifest.json"];
 
 self.addEventListener("install", (event) => {

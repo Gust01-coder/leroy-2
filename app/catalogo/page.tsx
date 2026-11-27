@@ -58,10 +58,12 @@ function CatalogoInner() {
   const router = useRouter();
   const params = useSearchParams();
   const initialQ = params.get("q") ?? "";
+  const initialCatParam = params.get("cat") ?? "Todos";
+  const initialCat = CATEGORIES.includes(initialCatParam) ? initialCatParam : "Todos";
 
   const [storeId, setStoreId] = useState("es-vitoria");
   const [query, setQuery] = useState(initialQ);
-  const [category, setCategory] = useState("Todos");
+  const [category, setCategory] = useState(initialCat);
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [detailTarget, setDetailTarget] = useState<{
@@ -249,10 +251,10 @@ function CatalogoInner() {
                   key={cat}
                   type="button"
                   onClick={() => setCategory(cat)}
-                  className={`rounded-full px-3 py-1 text-[12px] font-semibold transition ${
+                  className={`min-h-[36px] rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition ${
                     category === cat
-                      ? "bg-signage text-white"
-                      : "bg-floor text-signage-muted hover:text-signage"
+                      ? "bg-leroy-cta text-white shadow-sm"
+                      : "bg-floor text-signage-muted hover:bg-floor-deep hover:text-signage"
                   }`}
                 >
                   {cat}
@@ -307,10 +309,10 @@ function CatalogoInner() {
               return (
                 <article
                   key={product.id}
-                  className={`group flex flex-col overflow-hidden rounded-xl border bg-white transition ${
+                  className={`group flex flex-col overflow-hidden rounded-2xl border bg-white shadow-card transition duration-200 ${
                     selected
-                      ? "border-leroy ring-2 ring-leroy/40"
-                      : "border-rule hover:border-signage/35 hover:shadow-md"
+                      ? "border-leroy-cta ring-2 ring-leroy/35"
+                      : "border-rule/80 hover:-translate-y-0.5 hover:border-leroy/60 hover:shadow-card-hover"
                   }`}
                 >
                   {/* 1. Foto full-bleed 4:3 (clique abre detalhes técnicos e ESL) */}
@@ -386,10 +388,10 @@ function CatalogoInner() {
                       <button
                         type="button"
                         onClick={() => toggleProduct(product)}
-                        className={`inline-flex h-8 items-center gap-1 rounded-lg px-2.5 text-[12px] font-semibold transition ${
+                        className={`inline-flex h-9 items-center gap-1 rounded-xl px-3 text-[12px] font-semibold transition ${
                           selected
-                            ? "bg-leroy text-signage"
-                            : "bg-floor text-signage hover:bg-signage hover:text-white"
+                            ? "bg-leroy-cta text-white shadow-sm"
+                            : "bg-floor text-signage hover:bg-leroy-cta hover:text-white"
                         }`}
                       >
                         {selected ? (

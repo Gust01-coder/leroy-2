@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { StoreBar } from "@/components/StoreBar";
+import { Logo } from "@/components/Logo";
 import { VoiceButton } from "@/components/VoiceButton";
 import { ProductCardMedia } from "@/components/ProductThumb";
 import { ProductDetailModal } from "@/components/ProductDetailModal";
@@ -11,20 +12,30 @@ import { EslShelfModal } from "@/components/EslShelfModal";
 import {
   ArrowRightIcon,
   CameraIcon,
-  ChartIcon,
   DropletIcon,
   LayersIcon,
-  MapIcon,
   MapPinIcon,
   PaintbrushIcon,
   SearchIcon,
   ShieldCheckIcon,
+  SparkleIcon,
+  WrenchIcon,
   ZapIcon,
 } from "@/components/Icons";
 import { CATALOG, getStockForStore } from "@/lib/catalog";
 import { getStoreById } from "@/lib/stores";
 import { getSelectedStoreId, getStoredTickets } from "@/lib/telemetry";
 import { Product, ProjectItem } from "@/lib/types";
+
+const DEPARTMENTS = [
+  { label: "Hidráulica", cat: "Hidráulica", Icon: DropletIcon },
+  { label: "Tintas", cat: "Tintas", Icon: PaintbrushIcon },
+  { label: "Ferramentas", cat: "Ferramentas", Icon: WrenchIcon },
+  { label: "Fixação", cat: "Fixação", Icon: LayersIcon },
+  { label: "Elétrica", cat: "Elétrica", Icon: ZapIcon },
+  { label: "Obra", cat: "Materiais Básicos", Icon: ShieldCheckIcon },
+  { label: "Limpeza", cat: "Limpeza", Icon: SparkleIcon },
+];
 
 const QUICK_SCENARIOS = [
   {
@@ -33,7 +44,7 @@ const QUICK_SCENARIOS = [
     title: "Vazamento ou torneira",
     hint: "Diagnóstico em 15s",
     prompt: "Minha torneira está pingando",
-    Icon: DropletIcon,
+    image: "/products/hid-torneira-mono.jpg",
   },
   {
     corridor: "C09",
@@ -41,7 +52,7 @@ const QUICK_SCENARIOS = [
     title: "Pintar um cômodo",
     hint: "Calcula litros por m²",
     prompt: "Quero pintar um quarto azul de 3x4m",
-    Icon: PaintbrushIcon,
+    image: "/products/tin-acrilica-18l-azul.jpg",
   },
   {
     corridor: "C16",
@@ -49,7 +60,7 @@ const QUICK_SCENARIOS = [
     title: "Instalar prateleira",
     hint: "Alvenaria ou drywall",
     prompt: "Quero instalar uma prateleira na parede",
-    Icon: LayersIcon,
+    image: "/products/fix-prateleira-mdf.jpg",
   },
   {
     corridor: "C19",
@@ -57,7 +68,7 @@ const QUICK_SCENARIOS = [
     title: "Chuveiro ou LED",
     hint: "Troca segura 220V",
     prompt: "Meu chuveiro parou de esquentar",
-    Icon: ZapIcon,
+    image: "/products/ele-chuveiro-eletronico.jpg",
   },
 ];
 
@@ -76,7 +87,7 @@ export default function StoreModeHomePage() {
   const router = useRouter();
   const [storeId, setStoreId] = useState("es-vitoria");
   const [command, setCommand] = useState("");
-  const [openTickets, setOpenTickets] = useState(2);
+  const [openTickets, setOpenTickets] = useState(0);
   const [detailTarget, setDetailTarget] = useState<{
     product: Product;
     stockQty: number;
@@ -122,103 +133,169 @@ export default function StoreModeHomePage() {
     <main className="flex flex-1 flex-col bg-floor">
       <StoreBar />
 
-      {/* ===== HERO ENXUTO: FOCO TOTAL NA BUSCA MULTIMODAL ===== */}
-      <section className="blueprint-grid border-b border-signage bg-signage text-white">
-        <div className="container-wide py-8 md:py-10">
-          <div className="flex items-center gap-2 font-mono text-[11px] text-white/70">
-            <span className="h-2 w-2 rounded-full bg-leroy" />
-            <MapPinIcon size={12} className="text-leroy" />
-            <span className="truncate">
-              {activeStore.name} · {activeStore.address}
-            </span>
-          </div>
+      {/* ===== 1. HERO EDITORIAL FOTOGRÁFICO ESCURO (ESTILO REFERÊNCIA) ===== */}
+      <section className="relative overflow-hidden bg-signage text-white">
+        {/* Foto editorial à direita com fusão suave no escuro */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/hero-editorial.jpg"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[76%_20%] opacity-85"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#14171A] via-[#14171A]/92 via-[50%] to-[#14171A]/20"
+        />
 
-          <h1 className="mt-3 max-w-[680px] font-display text-[30px] font-extrabold leading-[1.08] tracking-tight text-white sm:text-[40px]">
-            O que você precisa resolver{" "}
-            <span className="text-leroy">hoje na loja?</span>
-          </h1>
-          <p className="mt-2 max-w-[560px] text-[14.5px] text-white/65">
-            Fale, digite do seu jeito ou fotografe a peça — encontramos o produto e o corredor exato.
-          </p>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              launchQuery(command, false);
-            }}
-            className="mt-5 flex max-w-[780px] flex-col gap-2 rounded-xl border border-white/15 bg-signage-soft p-2 sm:flex-row sm:items-center"
-          >
-            <div className="relative flex flex-1 items-center">
-              <SearchIcon
-                size={17}
-                className="pointer-events-none absolute left-3.5 text-white/45"
-              />
-              <input
-                type="text"
-                value={command}
-                onChange={(e) => setCommand(e.target.value)}
-                placeholder="Ex: torneira pingando"
-                className="h-11 w-full rounded-lg bg-signage pl-10 pr-3 text-[14px] text-white outline-none ring-1 ring-white/10 transition placeholder:text-white/40 focus:ring-leroy"
-              />
+        <div className="container-wide relative z-10 pb-16 pt-10 md:pb-20 md:pt-14">
+          <div className="max-w-[540px]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[12px] font-medium text-white/90 backdrop-blur-sm">
+              <MapPinIcon size={13} className="text-leroy" />
+              <span className="truncate">{activeStore.name}</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <VoiceButton
-                onTranscript={(transcript) => launchQuery(transcript, true)}
-              />
+            <h1 className="mt-4 font-display text-[32px] font-extrabold leading-[1.08] tracking-tight text-white sm:text-[44px]">
+              Resolva sua obra na loja<span className="text-leroy">.</span>
+            </h1>
+
+            <p className="mt-3 max-w-[460px] text-[15px] leading-relaxed text-white/75">
+              Descreva o problema do seu jeito, fale no microfone ou fotografe a peça — achamos o produto, o estoque e o corredor exato.
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <Link href="/chat" className="btn-accent !px-6">
+                <span>Abrir Copiloto IA</span>
+                <ArrowRightIcon size={16} />
+              </Link>
 
               <Link
                 href="/chat?vision=1"
-                className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-signage px-3.5 text-[13px] font-semibold text-white transition hover:border-leroy hover:text-leroy"
+                className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-5 py-2.5 text-[13.5px] font-semibold text-white backdrop-blur-sm transition hover:border-leroy hover:bg-white/15"
               >
                 <CameraIcon size={16} />
-                <span>Foto</span>
+                <span>Enviar foto da peça</span>
               </Link>
-
-              <button type="submit" className="btn-accent h-11 !px-5">
-                <span>Resolver</span>
-                <ArrowRightIcon size={15} />
-              </button>
             </div>
-          </form>
+          </div>
         </div>
       </section>
 
-      {/* ===== CONTEÚDO CALMO E ESCANEÁVEL (3 BLOCOS CLAROS) ===== */}
-      <div className="container-wide space-y-9 py-8">
-        {/* 1. Projetos rápidos em 4 cards */}
-        <section>
-          <div className="mb-3.5 flex items-baseline justify-between">
-            <h2 className="font-display text-[19px] font-extrabold text-signage">
-              Comece pelo problema
-            </h2>
+      {/* ===== 2. BARRA DE BUSCA FLUTUANTE SOBRE A BORDA DO HERO ===== */}
+      <div className="container-wide relative z-20 -mt-7">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            launchQuery(command, false);
+          }}
+          className="flex flex-col gap-2 rounded-2xl bg-white p-2 shadow-floating ring-1 ring-black/5 sm:flex-row sm:items-center"
+        >
+          <div className="relative flex flex-1 items-center">
+            <SearchIcon
+              size={18}
+              className="pointer-events-none absolute left-3.5 text-signage-subtle"
+            />
+            <input
+              type="text"
+              value={command}
+              onChange={(e) => setCommand(e.target.value)}
+              placeholder="Busque produto ou descreva o problema (ex: torneira pingando)…"
+              className="h-12 w-full rounded-xl bg-transparent pl-11 pr-3 text-[14.5px] text-signage outline-none placeholder:text-signage-subtle"
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2">
+            <VoiceButton
+              compact
+              onTranscript={(transcript) => launchQuery(transcript, true)}
+            />
+
+            <Link
+              href="/chat?vision=1"
+              aria-label="Diagnosticar por foto"
+              title="Diagnosticar peça por foto"
+              className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-rule-strong bg-white text-signage transition hover:border-leroy hover:bg-leroy-soft hover:text-leroy-deep"
+            >
+              <CameraIcon size={17} />
+            </Link>
+
+            <button
+              type="submit"
+              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-leroy-cta px-6 text-[14px] font-semibold text-white shadow-sm transition hover:bg-leroy-dark sm:flex-initial"
+            >
+              <SearchIcon size={15} />
+              <span>Buscar</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* ===== CONTEÚDO PRINCIPAL EM SEÇÕES BRANCAS ELEVADAS ===== */}
+      <div className="container-wide space-y-8 py-8">
+        {/* 3. Dock de 7 Categorias com Ícones (estilo referência) */}
+        <section aria-label="Departamentos">
+          <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-7 sm:gap-3">
+            {DEPARTMENTS.map(({ label, cat, Icon }) => (
+              <Link
+                key={label}
+                href={`/catalogo?cat=${encodeURIComponent(cat)}`}
+                className="group flex flex-col items-center justify-center rounded-2xl border border-rule/70 bg-white px-2 py-3.5 text-center shadow-card transition duration-200 hover:-translate-y-0.5 hover:border-leroy/70 hover:shadow-card-hover"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-leroy-soft text-leroy-deep transition group-hover:bg-leroy-cta group-hover:text-white">
+                  <Icon size={20} />
+                </div>
+                <span className="mt-2 max-w-full truncate text-[11px] font-semibold text-signage sm:text-[12px]">
+                  {label}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* 4. Seção Branca Elevada: Projetos Mais Resolvidos */}
+        <section className="panel p-5 sm:p-6">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-display text-[20px] font-extrabold text-signage">
+                Comece pelo problema
+              </h2>
+              <p className="mt-0.5 text-[13px] text-signage-muted">
+                Escolha um cenário pronto para gerar lista, orçamento e rota na loja
+              </p>
+            </div>
             <Link
               href="/chat"
-              className="text-[12.5px] font-semibold text-leroy-deep hover:underline"
+              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-leroy-cta px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-leroy-dark"
             >
-              Abrir assistente →
+              Abrir assistente
+              <ArrowRightIcon size={14} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {QUICK_SCENARIOS.map(({ corridor, sector, title, hint, prompt, Icon }) => (
+          <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+            {QUICK_SCENARIOS.map(({ corridor, sector, title, hint, prompt, image }) => (
               <Link
                 key={corridor}
                 href={`/chat?q=${encodeURIComponent(prompt)}`}
-                className="group flex flex-col justify-between rounded-xl border border-rule bg-white p-4 transition hover:border-leroy hover:shadow-sm"
+                className="group flex flex-col overflow-hidden rounded-xl border border-rule/80 bg-floor/40 transition duration-200 hover:-translate-y-0.5 hover:border-leroy/70 hover:bg-white hover:shadow-card-hover"
               >
-                <div className="flex items-center justify-between">
-                  <span className="aisle-plate">{corridor}</span>
-                  <Icon
-                    size={16}
-                    className="text-signage-subtle transition group-hover:text-leroy-dark"
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-floor">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={image}
+                    alt={title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                   />
+                  <span className="aisle-plate absolute left-2.5 top-2.5 shadow-sm">
+                    {corridor}
+                  </span>
                 </div>
-                <div className="mt-4">
-                  <div className="font-mono text-[11px] font-semibold uppercase tracking-wider text-signage-muted">
+                <div className="p-3.5">
+                  <div className="text-[11px] font-semibold uppercase tracking-wider text-leroy-deep">
                     {sector}
                   </div>
-                  <div className="mt-0.5 font-display text-[15px] font-bold leading-snug text-signage group-hover:text-leroy-deep">
+                  <div className="mt-0.5 font-display text-[14.5px] font-bold leading-snug text-signage group-hover:text-leroy-deep">
                     {title}
                   </div>
                   <div className="mt-1 text-[12px] text-signage-muted">{hint}</div>
@@ -228,17 +305,64 @@ export default function StoreModeHomePage() {
           </div>
         </section>
 
-        {/* 2. Destaques em estoque (mesmo padrão 4:3 limpo do catálogo) */}
-        <section>
-          <div className="mb-3.5 flex items-baseline justify-between">
-            <h2 className="font-display text-[19px] font-extrabold text-signage">
-              Em estoque em {activeStore.shortName}
-            </h2>
+        {/* 5. Banner Visual de Destaque: Planta 2D & Etiqueta ESL (estilo banner central da referência) */}
+        <section className="relative overflow-hidden rounded-2xl bg-signage text-white shadow-card">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/banner-decor.jpg"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-55"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#14171A]/95 via-[#14171A]/80 to-[#14171A]/30"
+          />
+
+          <div className="relative z-10 flex flex-col items-start justify-between gap-6 p-6 sm:p-8 lg:flex-row lg:items-center">
+            <div className="max-w-[560px]">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-leroy/20 px-3 py-1 text-[11.5px] font-semibold text-leroy">
+                Planta 2D · {activeStore.shortName}
+              </span>
+              <h2 className="mt-3 font-display text-[22px] font-extrabold leading-tight text-white sm:text-[26px]">
+                Ache a prateleira exata sem rodar pela loja.
+              </h2>
+              <p className="mt-1.5 text-[13.5px] leading-relaxed text-white/75">
+                Veja a rota pelos corredores no mapa 2D e acenda o LED verde na etiqueta eletrônica direto no produto.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              <Link href="/mapa?id=pintura-quarto" className="btn-accent !px-5">
+                <span>Abrir Planta 2D</span>
+                <ArrowRightIcon size={15} />
+              </Link>
+              <Link
+                href="/lista?id=instalar-prateleira"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white/25 bg-white/10 px-4 py-2.5 text-[13px] font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+              >
+                Exemplo de lista
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Seção Branca Elevada: Destaques em Estoque */}
+        <section className="panel p-5 sm:p-6">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-display text-[20px] font-extrabold text-signage">
+                Destaques em {activeStore.shortName}
+              </h2>
+              <p className="mt-0.5 text-[13px] text-signage-muted">
+                Produtos reais em estoque com corredor e localização na prateleira
+              </p>
+            </div>
             <Link
               href="/catalogo"
-              className="text-[12.5px] font-semibold text-leroy-deep hover:underline"
+              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-leroy-cta px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-leroy-dark"
             >
-              Ver todos ({CATALOG.length}) →
+              Ver todos ({CATALOG.length})
             </Link>
           </div>
 
@@ -250,7 +374,7 @@ export default function StoreModeHomePage() {
                   key={prod.id}
                   type="button"
                   onClick={() => setDetailTarget({ product: prod, stockQty: qty })}
-                  className="group flex flex-col overflow-hidden rounded-xl border border-rule bg-white text-left transition hover:border-signage/35 hover:shadow-md"
+                  className="group flex flex-col overflow-hidden rounded-xl border border-rule/80 bg-white text-left transition duration-200 hover:-translate-y-0.5 hover:border-leroy/70 hover:shadow-card-hover"
                 >
                   <div className="relative w-full">
                     <ProductCardMedia
@@ -266,11 +390,11 @@ export default function StoreModeHomePage() {
                   <div className="flex flex-1 flex-col justify-between p-3.5">
                     <div>
                       <div className="flex items-center gap-1.5 text-[10.5px]">
-                        <span className="font-mono font-bold uppercase tracking-wider text-signage-muted">
+                        <span className="font-mono font-bold uppercase tracking-wider text-signage-subtle">
                           {prod.brand}
                         </span>
                         {prod.leroyExclusive && (
-                          <span className="font-mono text-[10.5px] font-semibold text-leroy-deep">
+                          <span className="font-mono text-[10px] font-semibold text-leroy-deep">
                             · Exclusivo
                           </span>
                         )}
@@ -281,7 +405,7 @@ export default function StoreModeHomePage() {
                     </div>
 
                     <div className="mt-3 flex items-baseline justify-between border-t border-rule/70 pt-2.5">
-                      <span className="font-mono text-[15px] font-extrabold tabular-nums text-signage">
+                      <span className="font-mono text-[15.5px] font-extrabold tabular-nums text-signage">
                         {formatBRL(prod.price)}
                       </span>
                       <span className="text-[11px] font-medium text-signage-muted">
@@ -294,85 +418,94 @@ export default function StoreModeHomePage() {
             })}
           </div>
         </section>
-
-        {/* 3. Atalhos operacionais (3 cards limpos lado a lado) */}
-        <section className="grid gap-3 sm:grid-cols-3">
-          <Link
-            href="/mapa?id=pintura-quarto"
-            className="group flex items-center gap-3.5 rounded-xl border border-rule bg-white p-4 transition hover:border-signage/40"
-          >
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-leroy-soft text-leroy-deep">
-              <MapIcon size={18} />
-            </div>
-            <div className="min-w-0">
-              <div className="font-display text-[14.5px] font-bold text-signage group-hover:text-leroy-deep">
-                Mapa da loja e etiqueta que acende
-              </div>
-              <div className="text-[12px] text-signage-muted">
-                Mapa de corredores de {activeStore.shortName}
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/lista?id=instalar-prateleira"
-            className="group flex items-center gap-3.5 rounded-xl border border-rule bg-white p-4 transition hover:border-signage/40"
-          >
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-amberwarn-soft text-amberwarn">
-              <ShieldCheckIcon size={18} />
-            </div>
-            <div className="min-w-0">
-              <div className="font-display text-[14.5px] font-bold text-signage group-hover:text-leroy-deep">
-                Exemplo de lista pronta
-              </div>
-              <div className="text-[12px] text-signage-muted">
-                Peças que combinam, em 3 faixas de preço
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/painel"
-            className="group flex items-center justify-between gap-3 rounded-xl border border-signage bg-signage p-4 text-white transition hover:bg-signage-soft"
-          >
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 text-leroy">
-                <ChartIcon size={18} />
-              </div>
-              <div>
-                <div className="font-display text-[14.5px] font-bold text-white">
-                  Console do Vendedor
-                </div>
-                <div className="text-[12px] text-white/65">
-                  Chamados, mapa de calor e dados
-                </div>
-              </div>
-            </div>
-            {openTickets > 0 && (
-              <span className="flex-shrink-0 rounded-full bg-leroy px-2 py-0.5 font-mono text-[11px] font-extrabold text-signage">
-                {openTickets}
-              </span>
-            )}
-          </Link>
-        </section>
       </div>
 
-      <footer className="mt-auto border-t border-rule bg-white px-4 py-4">
-        <div className="container-wide flex flex-wrap items-center justify-between gap-2 text-[12px] text-signage-subtle">
-          <span>
-            <strong className="font-semibold text-signage">LM Copiloto</strong> ·{" "}
-            {activeStore.name} · Challenge FIAP 2026 (Tech_01)
-          </span>
-          <div className="flex items-center gap-4">
-            <Link href="/catalogo" className="hover:text-signage">
-              Catálogo
-            </Link>
-            <Link href="/mapa?id=pintura-quarto" className="hover:text-signage">
-              Planta 2D
-            </Link>
-            <Link href="/painel" className="hover:text-signage">
-              Vendedor
-            </Link>
+      {/* ===== 7. RODAPÉ ESCURO INSTITUCIONAL (ESTILO REFERÊNCIA) ===== */}
+      <footer className="mt-auto bg-signage text-white">
+        <div className="container-wide grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-3">
+            <Logo variant="dark" />
+            <p className="text-[12.5px] leading-relaxed text-white/60">
+              Assistente de autoatendimento em loja física para a unidade{" "}
+              <span className="text-white/85">{activeStore.name}</span>. Projeto Challenge FIAP 2026 — Grupo Tech_01.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-[12px] font-bold uppercase tracking-wider text-white/50">
+              Atendimento
+            </h3>
+            <ul className="mt-3 space-y-2 text-[13px] text-white/75">
+              <li>
+                <Link href="/chat" className="transition hover:text-leroy">
+                  Copiloto IA (Chat & Voz)
+                </Link>
+              </li>
+              <li>
+                <Link href="/chat?vision=1" className="transition hover:text-leroy">
+                  Diagnosticar por Foto
+                </Link>
+              </li>
+              <li>
+                <Link href="/catalogo" className="transition hover:text-leroy">
+                  Catálogo ({CATALOG.length} SKUs)
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-[12px] font-bold uppercase tracking-wider text-white/50">
+              Na Loja
+            </h3>
+            <ul className="mt-3 space-y-2 text-[13px] text-white/75">
+              <li>
+                <Link href="/mapa?id=pintura-quarto" className="transition hover:text-leroy">
+                  Planta 2D & Etiqueta ESL
+                </Link>
+              </li>
+              <li>
+                <Link href="/lista?id=instalar-prateleira" className="transition hover:text-leroy">
+                  Lista Auditada (Demo)
+                </Link>
+              </li>
+              <li>
+                <Link href="/catalogo?cat=Hidráulica" className="transition hover:text-leroy">
+                  Setor de Hidráulica
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-[12px] font-bold uppercase tracking-wider text-white/50">
+              Operação
+            </h3>
+            <ul className="mt-3 space-y-2 text-[13px] text-white/75">
+              <li>
+                <Link
+                  href="/painel"
+                  className="inline-flex items-center gap-2 transition hover:text-leroy"
+                >
+                  <span>Console do Vendedor</span>
+                  {openTickets > 0 && (
+                    <span className="rounded-full bg-leroy px-2 py-0.5 font-mono text-[10.5px] font-extrabold text-signage">
+                      {openTickets}
+                    </span>
+                  )}
+                </Link>
+              </li>
+              <li className="text-[12px] text-white/45">
+                {activeStore.address}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10">
+          <div className="container-wide flex flex-wrap items-center justify-between gap-2 py-4 text-[11.5px] text-white/45">
+            <span>LM Copiloto v2 · Challenge FIAP 2026 · Grupo Tech_01</span>
+            <span>Protótipo acadêmico de experiência em loja física</span>
           </div>
         </div>
       </footer>

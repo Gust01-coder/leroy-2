@@ -133,8 +133,8 @@ export function VoiceButton({
         title="Falar no microfone (mãos livres no corredor)"
         className={
           compact
-            ? "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg border border-rule-strong bg-white text-signage transition hover:border-leroy hover:bg-leroy-soft hover:text-leroy-deep disabled:opacity-40"
-            : "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-leroy/60 bg-leroy-soft px-4 py-3 text-[13.5px] font-bold text-leroy-deep transition hover:bg-leroy hover:text-signage disabled:opacity-40"
+            ? "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-rule-strong bg-white text-signage transition hover:border-leroy hover:bg-leroy-soft hover:text-leroy-deep disabled:opacity-40"
+            : "inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-leroy/60 bg-leroy-soft px-4 py-2.5 text-[13.5px] font-bold text-leroy-deep transition hover:bg-leroy-cta hover:text-white disabled:opacity-40"
         }
       >
         <MicIcon size={17} />
